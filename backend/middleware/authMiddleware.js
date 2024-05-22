@@ -1,19 +1,42 @@
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); 
+require("dotenv").config(); 
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
 
-  if (!token) {
-    return res.status(401).json({ msg: "No token, authorization denied" });
-  }
-
+exports.requireSignIn = (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
+    const token = req.header("Authorization").replace("Bearer ", "") || req.headers.authorization;
+
+  
+    if (!token || token === undefined) {
+      return res.status(401).json({
+        success: false,
+        Message: "Token missing",
+      });
+    }
+
+    
+    try {
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
+    
+      req.user = payload.email;
+
+    } catch (error) {
+     
+      return res.status(401).json({
+        success: false,
+        Message: "Token is invalid",
+      });
+    }
+
+    
+
     next();
-  } catch (err) {
-    res.status(401).json({ msg: "Token is not valid" });
+  } catch (error) {
+    
+    return res.status(401).json({
+      success: false,
+      Message: "Something went wrong while verifying the token",
+      error: error.message,
+    });
   }
 };
-
-module.exports = authMiddleware;

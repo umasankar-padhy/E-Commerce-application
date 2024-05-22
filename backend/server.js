@@ -1,22 +1,35 @@
+
 const express = require("express");
-const connectDB = require("./config/db");
-require("dotenv").config();
-
-// Connect to MongoDB
-connectDB();
-
 const app = express();
+const cors = require('cors');
+const dotenv = require("dotenv");
+const dbConnect = require("./config/db");
 
-// Middleware
-app.use(express.json({ extended: false }));
+dotenv.config();
 
-// Define Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/cart", require("./routes/cartRoutes"));
-app.use("/api/orders", require("./routes/orderRoutes"));
-app.use("/api/products", require("./routes/productRoutes"));
-app.use("/api/stripe", require("./routes/stripeRoutes"));
+const PORT = process.env.PORT || 4000;
 
-const PORT = process.env.PORT || 5000;
+app.use(cors()); 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+const fileupload = require("express-fileupload");
+app.use(fileupload());
+
+
+
+
+app.get("/", (req, res) => {
+    res.send("<h2>Welcome to the homepage</h2>");
+});
+
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/v1/auth", authRoutes);
+
+
+dbConnect();
+
+app.listen(PORT, () => {
+    console.log(`Server started at port ${PORT}`);
+});
