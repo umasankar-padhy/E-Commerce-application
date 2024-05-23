@@ -24,8 +24,20 @@ app.get("/", (req, res) => {
     res.send("<h2>Welcome to the homepage</h2>");
 });
 
-const authRoutes = require("./routes/authRoutes");
+const authRoutes = require("./routes/userRoutes");
 app.use("/api/v1/auth", authRoutes);
+
+const addressRoutes = require("./routes/addressRoutes");
+app.use("/api/v1/address", addressRoutes);
+
+const merchantRoutes = require("./routes/merchantRoutes");
+app.use("/api/v1/merchant", merchantRoutes);
+
+const productRoutes = require("./routes/productRoutes");
+app.use("/api/v1/product", productRoutes); 
+
+const cartRoutes = require("./routes/cartRoutes");
+app.use("/api/v1/cart", cartRoutes);
 
 
 dbConnect();

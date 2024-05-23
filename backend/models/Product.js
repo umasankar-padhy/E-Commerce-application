@@ -35,23 +35,23 @@ const productSchema = new mongoose.Schema({
     required: true,
     default: true
   },
-  merchantId: {
+  merchant_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Merchant',
     required: true
   },
-  manufacturingDate: {
+  MFG_Date: {
     type: Date,
     required: true
   },
-  expDate: {
+  EXP_Date: {
     type: Date,
     required: true
   },
   productId: {
     type: String,
-    required: true,
-    unique: true
+    // required: true,
+    // unique: true
   },
   brand: {
     type: String,

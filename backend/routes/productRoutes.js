@@ -1,34 +1,19 @@
+
 const express = require("express");
-const Product = require("../models/Product");
-
 const router = express.Router();
+const { requireSignIn } = require("../middleware/authMiddleware");
+const {
+  createProduct,
+  getProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct
+} = require("../controllers/productController");
 
-// Get all products
-router.get("/", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-});
-
-// Get single product by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ msg: "Product not found" });
-    }
-    res.json(product);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind === "ObjectId") {
-      return res.status(404).json({ msg: "Product not found" });
-    }
-    res.status(500).send("Server error");
-  }
-});
+router.post("/create", requireSignIn, createProduct); // Protected route to create a new product
+router.get("/get", getProduct); // Protected route to get product by ID
+router.get("/get/:id", getProductById); // Protected route to get product by ID
+router.put("/update/:id", requireSignIn, updateProduct); // Protected route to update product details
+router.delete("/delete/:id", requireSignIn, deleteProduct); // Protected route to delete a product
 
 module.exports = router;

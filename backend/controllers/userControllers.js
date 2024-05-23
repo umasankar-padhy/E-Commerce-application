@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
+//controller for new user registration
 exports.signup = async (req, res) => {
     try {
 
@@ -37,7 +38,7 @@ exports.signup = async (req, res) => {
             password: hashPassword,
             phoneNo
         });
-        return res.status(200).json({
+        return res.status(201).json({
             success: true,
             data: user,
             message: "User created successfully",
@@ -53,7 +54,7 @@ exports.signup = async (req, res) => {
 
 
 
-
+//controller for checking user is registered or not in every click
 exports.signupcheck = async (req, res) => {
     try {
         const { email } = req.body;
@@ -81,7 +82,7 @@ exports.signupcheck = async (req, res) => {
 
 
 
-
+// controller for login
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -101,6 +102,7 @@ exports.login = async (req, res) => {
         const payload = {
             email: user.email,
             id: user._id,
+            role:"user"
         };
         if (await bcrypt.compare(password, user.password)) {
             let token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -147,12 +149,12 @@ exports.login = async (req, res) => {
 
 
 
-
+// controller for get user profiles by user id through token
 
 exports.getProfile = async (req, res) => {
     try {
-        const email = req.user;
-        const user = await User.findOne({ email });
+        const id = req.userId;
+        const user = await User.findById(id);
 
         if (!user) {
             return res.status(404).json({
@@ -175,9 +177,12 @@ exports.getProfile = async (req, res) => {
     }
 };
 
+// controller for update user profiles by user id through token
+
+
 exports.updateProfile = async (req, res) => {
     try {
-        const email = req.user;
+        const id = req.userId;
         const { name, phoneNo,alternatePhoneNo } = req.body;
 
         if (!name || !phoneNo ) {
@@ -188,7 +193,7 @@ exports.updateProfile = async (req, res) => {
         }
 
         const user = await User.findOneAndUpdate(
-            { email },
+            { _id:id },
             { name, phoneNo , alternatePhoneNo},
             { new: true }
         );

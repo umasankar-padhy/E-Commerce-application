@@ -17,9 +17,12 @@ exports.requireSignIn = (req, res, next) => {
     
     try {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
-    
-      req.user = payload.email;
-
+      if (payload.role === "user")
+        req.userId = payload.id;
+       if (payload.role === "merchant")
+        req.merchantId = payload.id;
+      // console.log(req.userId)
+      // console.log(req.merchantId)
     } catch (error) {
      
       return res.status(401).json({

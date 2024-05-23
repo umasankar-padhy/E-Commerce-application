@@ -7,14 +7,14 @@ const merchantSchema = new mongoose.Schema({
         required: true
     },
     phoneNo: {
-        type: String,
+        type: Number,
         required: true
     },
-    altPhoneNo: {
-        type: String,
+    alternatePhoneNo: {
+        type: Number,
         required: false
     },
-    email: {
+    email: { 
         type: String,
         required: true,
         unique: true
@@ -23,23 +23,23 @@ const merchantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    products: [{
+    product_id: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     }],
-    addresses: [{
+    address_id: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Address'
     }],
     merchantId: {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true
     },
-    productId: {
+    productId: [{
         type: String,
         required: false
-    }
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Merchant', merchantSchema);

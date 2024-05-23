@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 
 
 const addressSchema = new mongoose.Schema({
-    user_id:{
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    },
+     merchant_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Merchant"
     },
     houseNo: {
         type: String,

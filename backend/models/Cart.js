@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 // Cart Summary Schema
 const cartSummarySchema = new mongoose.Schema({
-  productId: {
+  product_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
     required: true
@@ -38,7 +38,7 @@ const cartSummarySchema = new mongoose.Schema({
 
 // Cart Schema
 const cartSchema = new mongoose.Schema({
-  user: {
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -46,7 +46,8 @@ const cartSchema = new mongoose.Schema({
   cartSummary: [cartSummarySchema],
   total: {
     type: Number,
-    required: true
+    required: true,
+    default: 0
   }
 }, { timestamps: true });
 
