@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import Navbarr from './Navbar';
 import Spinner from './Spinner';
+import { url } from '../default';
 
 export default function ProductDetails() {
   const params = useParams();
@@ -12,7 +13,7 @@ export default function ProductDetails() {
   const getProduct = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`api/v1/product/get/${params?.id}`);
+      const { data } = await axios.get(`${url}api/v1/product/get/${params?.id}`);
       setProduct(data?.data);
       setLoading(false);
     } catch (error) {

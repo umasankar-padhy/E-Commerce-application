@@ -8,6 +8,7 @@ import Navbarr from "./Navbar";
 import { useDispatch } from 'react-redux';
 import { setAuth } from '../redux/auth/authActions';
 import Spinner from "./Spinner";
+import { url } from "../default";
 
 
 export default function Login() {
@@ -38,7 +39,7 @@ export default function Login() {
         try {
             setLoading(true);
 
-            const res = await axios.post("api/v1/user/login", formData);
+            const res = await axios.post(`${url}api/v1/user/login`, formData);
 
             if (res.data.success) {
                 alert(res.data.message);

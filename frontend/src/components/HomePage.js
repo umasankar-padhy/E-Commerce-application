@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbarr from './Navbar';
 import Spinner from './Spinner';
 import Card from './Card';
+import { url } from '../default';
 
 
 export default function HomePage() {
@@ -15,7 +16,7 @@ export default function HomePage() {
     const getAllProducts = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`api/v1/product/get`);
+            const { data } = await axios.get(`${url}api/v1/product/get`);
             setProducts(data?.data);
             setLoading(false);
         } catch (error) {

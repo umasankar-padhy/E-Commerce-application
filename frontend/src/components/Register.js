@@ -4,6 +4,7 @@ import { useState } from "react";
 // import Footer from "./Footer";
 import Navbarr from "./Navbar";
 import Spinner from "./Spinner";
+import { url } from "../default";
 
 export default function Register() {
     
@@ -43,7 +44,7 @@ export default function Register() {
 
         try {
             setLoading(true);
-            const res = await axios.post("api/v1/user/signup", formData);
+            const res = await axios.post(`${url}api/v1/user/signup`, formData);
 
             if (res.data.success) {
                 // Redirect to the dashboard page

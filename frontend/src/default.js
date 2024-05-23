@@ -1,0 +1,1 @@
+export const url = "https://e-commerce-application-yb87.onrender.com/"
