@@ -9,9 +9,9 @@ dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); 
+app.use(express.json());
 
 
 const fileupload = require("express-fileupload");
@@ -34,7 +34,7 @@ const merchantRoutes = require("./routes/merchantRoutes");
 app.use("/api/v1/merchant", merchantRoutes);
 
 const productRoutes = require("./routes/productRoutes");
-app.use("/api/v1/product", productRoutes); 
+app.use("/product", productRoutes);
 
 const cartRoutes = require("./routes/cartRoutes");
 app.use("/api/v1/cart", cartRoutes);
