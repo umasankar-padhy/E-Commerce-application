@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 const authRoutes = require("./routes/userRoutes");
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", authRoutes);
 
 const addressRoutes = require("./routes/addressRoutes");
 app.use("/api/v1/address", addressRoutes);
@@ -34,7 +34,7 @@ const merchantRoutes = require("./routes/merchantRoutes");
 app.use("/api/v1/merchant", merchantRoutes);
 
 const productRoutes = require("./routes/productRoutes");
-app.use("/product", productRoutes);
+app.use("/api/v1/product", productRoutes);
 
 const cartRoutes = require("./routes/cartRoutes");
 app.use("/api/v1/cart", cartRoutes);

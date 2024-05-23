@@ -15,8 +15,8 @@ export default function HomePage() {
     const getAllProducts = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`/api/products`);
-            setProducts(data);
+            const { data } = await axios.get(`api/v1/product/get`);
+            setProducts(data?.data);
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -33,6 +33,8 @@ export default function HomePage() {
     <div>
           <Navbarr />
               <h2 className="text-center">All Products</h2>
+           {/* <pre>{JSON.stringify(products, null, 4)}</pre>  */}
+
         {loading?<Spinner />:
               <div className="d-flex flex-wrap justify-content-center">
 

@@ -12,8 +12,8 @@ export default function ProductDetails() {
   const getProduct = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/products/${params.id}`);
-      setProduct(data);
+      const { data } = await axios.get(`api/v1/product/get/${params?.id}`);
+      setProduct(data?.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -26,6 +26,8 @@ export default function ProductDetails() {
   return (
     <div>
       <Navbarr />
+      {/* <pre>{JSON.stringify(product, null, 4)}</pre>  */}
+
       {loading?<Spinner />:
         <div className="d-flex flex-wrap justify-content-center">
 
@@ -34,7 +36,7 @@ export default function ProductDetails() {
               <img
                 src={product.imageUrl}
                 className="card-img-top"
-                alt={product.name}
+                alt={product.title}
                 style={{
                   height: "400px", width: "300px"
                 }}
@@ -43,7 +45,7 @@ export default function ProductDetails() {
             </div>
             <div className="col-md-6 ">
               <h2 className="text-center">Product Details</h2>
-              <h5>{product.name}</h5>
+              <h5>{product.title}</h5>
               <p>{product.description}</p>
               <h4>Rs. {product.price}/-</h4>
               <button className="btn btn-warning " onClick={() => {

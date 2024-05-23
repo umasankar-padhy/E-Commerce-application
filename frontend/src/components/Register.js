@@ -3,19 +3,21 @@ import axios from "axios";
 import { useState } from "react";
 // import Footer from "./Footer";
 import Navbarr from "./Navbar";
+import Spinner from "./Spinner";
 
 export default function Register() {
     
     const [errorMessage, setErrorMessage] = useState('');
     let navigate = useNavigate();
     const [view, setView] = useState(true)
+    const [loading, setLoading] = useState(false);
 
 
     const [formData, setFormData] = useState({
-        username: '',
+        name: '',
         email: '',
         password: '',
-        mobile: ''
+        phoneNo: ''
     });
 
     function handleInputChange(e) {
@@ -40,7 +42,8 @@ export default function Register() {
 
 
         try {
-            const res = await axios.post("api/auth/register", formData);
+            setLoading(true);
+            const res = await axios.post("api/v1/user/signup", formData);
 
             if (res.data.success) {
                 // Redirect to the dashboard page
@@ -49,6 +52,8 @@ export default function Register() {
             } else {
                 alert(res.data.message);
             }
+            setLoading(false);
+
         } catch (err) {
             console.error('Error:', err);
         }
@@ -57,8 +62,8 @@ export default function Register() {
 
     // Function to perform form validation
     function validateForm() {
-        if (formData.username.trim() === '') {
-            setErrorMessage('Username is required');
+        if (formData.name.trim() === '') {
+            setErrorMessage('name is required');
             return false;
         }
         if (formData.email.trim() === '') {
@@ -69,8 +74,8 @@ export default function Register() {
             setErrorMessage('Password is required');
             return false;
         }
-        if (formData.mobile.trim() === '') {
-            setErrorMessage('Mobile number is required');
+        if (formData.phoneNo.trim() === '') {
+            setErrorMessage('phoneNo number is required');
             return false;
         }
 
@@ -88,8 +93,8 @@ export default function Register() {
             return false;
         }
 
-        if (!/^\d{10}$/.test(formData.mobile)) {
-            setErrorMessage('Mobile number must be 10 digits');
+        if (!/^\d{10}$/.test(formData.phoneNo)) {
+            setErrorMessage('phoneNo number must be 10 digits');
             return false;
         }
 
@@ -145,6 +150,8 @@ export default function Register() {
                 setErrorMessage('');
             }
         } catch (err) {
+            setLoading(false);
+
             console.error('Error:', err);
         }
     }
@@ -156,31 +163,32 @@ export default function Register() {
             {/* <div style={{ backgroundColor: "#ffff00" }}> <h4 className="p-2 m-2">Register Page</h4></div> */}
             <span className="text-danger d-flex align-items-center justify-content-center">{errorMessage}</span>
 
-            <div className="d-flex align-items-center justify-content-center  " style={{ minHeight: "90vh" }}>
+            {loading ? <Spinner /> :
+                <div className="d-flex align-items-center justify-content-center  " style={{ minHeight: "90vh" }}>
 
-                <form className="col-3-lg col-6-md col-9-sm  border border-5 border-light rounded rounded-3" onSubmit={handleSubmit}>
+                    <form className="col-3-lg col-6-md col-9-sm  border border-5 border-light rounded rounded-3" onSubmit={handleSubmit}>
 
-                    <div className="m-1 rounded rounded-2  " style={{ backgroundColor: "#e8e9eb" }}> <h4 className="p-2 m-2">Register Page</h4></div>
+                        <div className="m-1 rounded rounded-2  " style={{ backgroundColor: "#e8e9eb" }}> <h4 className="p-2 m-2">Register Page</h4></div>
 
-                    {/* <span className="text-danger ">{errorMessage}</span> */}
-                    <div className="p-1 m-2">
+                        {/* <span className="text-danger ">{errorMessage}</span> */}
+                        <div className="p-1 m-2">
 
-                        {/* <label htmlFor="username">Enter user name:</label> */}
-                        <input type="text" className="form-control" id="username" name="username"
-                            value={formData.username} placeholder="Enter Username" onChange={handleInputChange}
-                            autoFocus required
-                        />
-                    </div>
-                    <div className="p-1 m-2">
+                            {/* <label htmlFor="name">Enter user name:</label> */}
+                            <input type="text" className="form-control" id="name" name="name"
+                                value={formData.name} placeholder="Enter name" onChange={handleInputChange}
+                                autoFocus required
+                            />
+                        </div>
+                        <div className="p-1 m-2">
 
-                        {/* <label htmlFor="email">Enter  email:</label> */}
-                        <input type="email" className="form-control" id="email" name="email"
-                            value={formData.email} placeholder="Enter Email" onChange={handleInputChange} onKeyUp={VerifyEmail}
-                            required
-                        />
-                        {/* <span className="text-danger">{errorMessage}</span> */}
-                    </div>
-                    {/* <div className="p-1 m-2">
+                            {/* <label htmlFor="email">Enter  email:</label> */}
+                            <input type="email" className="form-control" id="email" name="email"
+                                value={formData.email} placeholder="Enter Email" onChange={handleInputChange} onKeyUp={VerifyEmail}
+                                required
+                            />
+                            {/* <span className="text-danger">{errorMessage}</span> */}
+                        </div>
+                        {/* <div className="p-1 m-2">
 
                          <label htmlFor="password">Enter password:</label> 
                         <input type="password" className="form-control" id="password" name="password"
@@ -188,53 +196,55 @@ export default function Register() {
                             required
                         />
                     </div> */}
-                    <div className="p-1 m-2">
+                        <div className="p-1 m-2">
 
-                        {/* <label htmlFor="mobile">Mobile:</label> */}
-                        <input type="text" className="form-control" id="mobile" name="mobile"
-                            value={formData.mobile} placeholder="Mobile" onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div className="p-1 m-2 " style={{ height: "3rem" }}>
-                        {/* <label htmlFor="password">Enter password:</label> */}
-                        {view ?
-                            <div style={{ height: "3rem" }}>
-                                <input
-                                    type="password" className="form-control" id="password" name="password"
-                                    value={formData.password} placeholder="Enter Password" onChange={handleInputChange}
-                                    required
-                                /><span className="bi bi-eye-slash-fill  "
-                                    onClick={() => setView(false)}
-                                    style={{ position: 'relative', left: "181px", bottom: "30px" }}
-                                ></span>
-                            </div> :
-                            <div style={{ height: "3rem" }}>
-                                <input
-                                    type="text" className="form-control" id="password" name="password"
-                                    value={formData.password} placeholder="Enter Password" onChange={handleInputChange}
-                                    required
-                                /><span className="bi bi-eye  "
-                                    onClick={() => setView(true)}
+                            {/* <label htmlFor="phoneNo">phoneNo:</label> */}
+                            <input type="text" className="form-control" id="phoneNo" name="phoneNo"
+                                value={formData.phoneNo} placeholder="phoneNo" onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="p-1 m-2 " style={{ height: "3rem" }}>
+                            {/* <label htmlFor="password">Enter password:</label> */}
+                            {view ?
+                                <div style={{ height: "3rem" }}>
+                                    <input
+                                        type="password" className="form-control" id="password" name="password"
+                                        value={formData.password} placeholder="Enter Password" onChange={handleInputChange}
+                                        required
+                                    /><span className="bi bi-eye-slash-fill  "
+                                        onClick={() => setView(false)}
+                                        style={{ position: 'relative', left: "181px", bottom: "30px" }}
+                                    ></span>
+                                </div> :
+                                <div style={{ height: "3rem" }}>
+                                    <input
+                                        type="text" className="form-control" id="password" name="password"
+                                        value={formData.password} placeholder="Enter Password" onChange={handleInputChange}
+                                        required
+                                    /><span className="bi bi-eye  "
+                                        onClick={() => setView(true)}
 
-                                    style={{ position: 'relative', left: "181px", bottom: "30px" }}
-                                ></span>
-                            </div>
-                        }
+                                        style={{ position: 'relative', left: "181px", bottom: "30px" }}
+                                    ></span>
+                                </div>
+                            }
 
-                    </div>
-                    
-                   
-                    <div className="p-1 m-2">
+                        </div>
 
-                        <button className="btn btn-primary w-100" >submit</button>
-                    </div>
-                    <div className="p-1 m-2">
 
-                        <Link to="/login"> already have account</Link>
-                    </div>
-                </form>
-            </div>
+                        <div className="p-1 m-2">
+
+                            <button className="btn btn-primary w-100" >submit</button>
+                        </div>
+                        <div className="p-1 m-2">
+
+                            <Link to="/login"> already have account</Link>
+                        </div>
+                    </form>
+                </div>
+            }
+           
 
         </div>
     )

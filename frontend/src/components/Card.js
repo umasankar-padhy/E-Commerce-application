@@ -13,7 +13,7 @@ export default function Card({item}) {
 
 
     // const handleAddToCart = () => {
-    //     if (newItem.id && newItem.name) {
+    //     if (newItem.id && newItem.title) {
     //         dispatch(addToCart(newItem));
     //         setNewItem({ id: '', name: '', quantity: 1 });
     //     }
@@ -32,14 +32,14 @@ export default function Card({item}) {
               <img
                   src={item.imageUrl}
                   className="card-img-top"
-                  alt={item.name}
+                  alt={item.title}
                   style={{ height: "12rem" }}></img>
 
               {/* <h5 className="card-title">{props.post.title.length > 14 ? `${props.post.title.substring(0, 14)}...` : props.post.title}</h5> */}
 
 
               <div className="card-body" style={{ height: "11.5rem" }}>
-                  <h6 className="card-title">{item.name.length > 64 ? `${item.name.substring(0, 64)}...` : item.name}</h6>
+                  <h6 className="card-title">{item.title.length > 64 ? `${item.title.substring(0, 64)}...` : item.title}</h6>
                  
                   <h5 className="card-title">&#8377;{item.price}/-</h5>
                   <h6 className="card-title">set Quantity :
