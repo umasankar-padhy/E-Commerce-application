@@ -49,7 +49,7 @@ exports.addToCart = async (req, res) => {
 
         cart.total = cart.cartSummary.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
-        await cart.save();
+        await cart.save().populate("cart_id").exec();
 
         const updateUser = await User.findByIdAndUpdate(req.userId,  {cart_id: cart._id }, { new: true })
             .populate("cart_id").exec();
@@ -77,7 +77,7 @@ exports.getCart = async (req, res) => {
         const cart = await Cart.findOne({ user_id: userId }).populate('cartSummary.product_id');
 
         if (!cart) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: 'Cart not found'
             });
