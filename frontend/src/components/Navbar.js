@@ -2,29 +2,22 @@
 
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
-
-// import { useSelector } from 'react-redux';
-// import toast from "react-hot-toast";
-// import SearchInput from "../Form/SearchInput";
-// import useCategory from "../../hooks/useCategory";
-// import { useCart } from "../../context/cart";
 import { Badge, Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { useDispatch,useSelector } from 'react-redux';
 import { setAuth } from '../redux/auth/authActions';
+import { toast } from "react-toastify";
 
 export default function Navbarr() {
-    // const [cart] = useCart();
     const dispatch = useDispatch();
-
-    // const categories = useCategory();
     const auth = useSelector((state) => state.auth);
+    const cart = useSelector((state) => state.cart);
+    // const inCartItems = cart.filter(item => item.isAdded);
+
     console.log(auth)
     const handleLogout = () => {
-        // setAuth({});
         localStorage.removeItem("auth");
-        dispatch(setAuth({}));
-
-        alert("Logout Successfully");
+        dispatch(setAuth([]));
+        toast("Logout Successfully");
     };
 
     return (
@@ -45,9 +38,15 @@ export default function Navbarr() {
 
                         <Nav.Item>
                             <Nav.Link to="/cart" as={NavLink}>
+                                {/* <pre>{JSON.stringify(cart, null, 4)}</pre> */}
+
 
                                 Cart{" "}
-                                {/* {cart.length ? <Badge bg="secondary">{cart.length}</Badge> : ""} */}
+                                {cart.length ? (
+                                    <Badge bg="secondary">
+                                        {cart?.length}
+                                    </Badge>
+                                ) : ""}
 
 
                             </Nav.Link>
@@ -75,17 +74,8 @@ export default function Navbarr() {
 
                         )}
 
-                        {/* {auth?.user?.role ? "" : */}
-
-
-
-                        {/* } */}
-
-                        {/* <Nav.Item>
-                         <Nav.Link as={NavLink} to="/cart">
-                           Cart (0)
-                            </Nav.Link>
-                              </Nav.Item> */}
+                 
+                        
                     </Nav>
                 </Navbar.Collapse>
             </div>

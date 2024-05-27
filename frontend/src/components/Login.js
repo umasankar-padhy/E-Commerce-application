@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setAuth } from '../redux/auth/authActions';
 import Spinner from "./Spinner";
 import { url } from "../default";
+import { toast } from "react-toastify";
 
 
 export default function Login() {
@@ -42,13 +43,13 @@ export default function Login() {
             const res = await axios.post(`${url}api/v1/user/login`, formData);
 
             if (res.data.success) {
-                alert(res.data.message);
+                toast(res.data.message);
                 dispatch(setAuth(res.data));
                 localStorage.setItem("auth", JSON.stringify(res.data));
                 // navigate(location.state || "/home");
                 navigate(location.state?.from || '/home');
             } else {
-                alert(res.data.message);
+                toast(res.data.message);
             }
             setLoading(false);
 

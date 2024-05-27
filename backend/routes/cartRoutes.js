@@ -4,7 +4,7 @@ const { addToCart, getCart, updateCartItem, removeFromCart } = require('../contr
 const { requireSignIn } = require('../middleware/authMiddleware');
 
 router.post('/add-to-cart', requireSignIn, addToCart);
-router.get('/get', requireSignIn, getCart);
+router.get('/get-cart', requireSignIn, getCart);
 router.put('/update-cart-item', requireSignIn, updateCartItem);
 router.delete('/remove-from-cart', requireSignIn, removeFromCart);
 

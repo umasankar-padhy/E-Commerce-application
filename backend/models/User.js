@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order'
   }],
-  cart_id: {
+  cart_id: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cart'
-  }
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

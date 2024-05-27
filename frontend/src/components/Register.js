@@ -5,6 +5,7 @@ import { useState } from "react";
 import Navbarr from "./Navbar";
 import Spinner from "./Spinner";
 import { url } from "../default";
+import { toast } from "react-toastify";
 
 export default function Register() {
     
@@ -48,10 +49,10 @@ export default function Register() {
 
             if (res.data.success) {
                 // Redirect to the dashboard page
-                alert(res.data.message);
+                toast(res.data.message);
                 navigate("/login");
             } else {
-                alert(res.data.message);
+                toast(res.data.message);
             }
             setLoading(false);
 
@@ -141,21 +142,21 @@ export default function Register() {
     }
 
 
-    async function VerifyEmail() {
-        try {
-            const res = await axios.post("api/v1/auth/signupcheck", { email: formData.email });
-            // console.log(res.data.success);
-            if (res.data.success) {
-                setErrorMessage('User ID already exists');
-            } else {
-                setErrorMessage('');
-            }
-        } catch (err) {
-            setLoading(false);
+    // async function VerifyEmail() {
+    //     try {
+    //         const res = await axios.post(`${url}api/v1/user/signupcheck`, { email: formData.email });
+    //         // console.log(res.data.success);
+    //         if (res.data.success) {
+    //             setErrorMessage('User ID already exists');
+    //         } else {
+    //             setErrorMessage('');
+    //         }
+    //     } catch (err) {
+    //         setLoading(false);
 
-            console.error('Error:', err);
-        }
-    }
+    //         console.error('Error:', err);
+    //     }
+    // }
 
 
     return (
@@ -184,7 +185,8 @@ export default function Register() {
 
                             {/* <label htmlFor="email">Enter  email:</label> */}
                             <input type="email" className="form-control" id="email" name="email"
-                                value={formData.email} placeholder="Enter Email" onChange={handleInputChange} onKeyUp={VerifyEmail}
+                                value={formData.email} placeholder="Enter Email" onChange={handleInputChange} 
+                                // onKeyUp={VerifyEmail}
                                 required
                             />
                             {/* <span className="text-danger">{errorMessage}</span> */}

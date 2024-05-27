@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import axios from "axios";
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import Navbarr from './Navbar';
 import Spinner from './Spinner';
 import Card from './Card';
 import { url } from '../default';
-
 
 export default function HomePage() {
     // const [cart, setCart] = useCart();
@@ -12,7 +11,7 @@ export default function HomePage() {
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState([]);
 
-    //get products
+    // Fetch products from the API
     const getAllProducts = async () => {
         try {
             setLoading(true);
@@ -21,31 +20,32 @@ export default function HomePage() {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            console.log(error);
+            console.error(error);
         }
     };
+
     useEffect(() => {
-        getAllProducts()
+        getAllProducts();
     }, []);
 
-  
+    // Memoize the products data to prevent unnecessary re-renders
+    const memoizedProducts = useMemo(() => products, [products]);
 
-  return (
-    <div>
-          <Navbarr />
-              <h2 className="text-center">All Products</h2>
-           {/* <pre>{JSON.stringify(products, null, 4)}</pre>  */}
+    return (
+        <div>
+            <Navbarr />
+            <h2 className="text-center">All Products</h2>
+            {/* <pre>{JSON.stringify(products, null, 4)}</pre> */}
 
-        {loading?<Spinner />:
-              <div className="d-flex flex-wrap justify-content-center">
-
-                  {products?.map((item) => (
-                    <Card key={item._id} item={item} />
-                  ))}
-              </div>
-        }
-              
-          
-    </div>
-  )
+            {loading ? (
+                <Spinner />
+            ) : (
+                <div className="d-flex flex-wrap justify-content-center">
+                    {memoizedProducts?.map((item) => (
+                        <Card key={item._id} item={item} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 }

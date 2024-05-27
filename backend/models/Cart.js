@@ -1,17 +1,26 @@
 const mongoose = require('mongoose');
 
-
-// Cart Summary Schema
-const cartSummarySchema = new mongoose.Schema({
+const cartSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   product_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
     required: true
   },
-  price: {
-    type: Number,
-    required: true
+  address_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Address',
+    // required: true
   },
+  // orderId: {
+  //   type: String,
+  //   required: true,
+  //   unique: true
+  // },
   quantity: {
     type: Number,
     required: true
@@ -24,31 +33,39 @@ const cartSummarySchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  isChecked: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
+  // isAdded: {
+  //   type: Boolean,
+  //   required: true,
+  //   default: true
+  // },
   isOrdered: {
     type: Boolean,
     required: true,
     default: false
-  }
-}, { _id: false });
-
-// Cart Schema
-const cartSchema = new mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
   },
-  cartSummary: [cartSummarySchema],
-  total: {
-    type: Number,
+  orderDate: {
+    type: Date,
+    // required: true
+  },
+  isDelivered: {
+    type: Boolean,
     required: true,
-    default: 0
+    default: false
+  },
+  isCancelled: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  isReturned: {
+    type: Boolean,
+    required: true,
+    default: false
   }
-}, { timestamps: true });
+}, {
+  timestamps: true
+});
 
-module.exports = mongoose.model('Cart', cartSchema);
+const Cart = mongoose.model('Cart', cartSchema);
+
+module.exports = Cart;
