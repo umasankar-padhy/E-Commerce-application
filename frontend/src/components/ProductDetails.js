@@ -133,6 +133,15 @@ export default function ProductDetails() {
               <h5>{product.title}</h5>
               <p>{product.description}</p>
               <h4> &#8377; {product.price}/-</h4>
+              <h6 className="card-title">set Quantity :
+                <select className='ms-2 h-100 bg-light rounded' onChange={(e) => setQty(e.target.value)}>
+                  {Array.from(Array(10), (e, i) => {
+                    return (
+                      <option key={i + 1} value={i + 1}>{i + 1}</option>
+                    )
+                  })}
+                </select>
+              </h6>
               {isProductInCart && !isOrdered ? (
 
                 <button
