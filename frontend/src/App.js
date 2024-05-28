@@ -13,6 +13,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import MerchantSignupPage from "./components/merchant/MerchantSignup";
 import MerchantLogin from "./components/merchant/MerchantLogin";
 import MerchantDashboard from "./components/merchant/MerchantDashboard";
+import Profile from "./components/merchant/Profile";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           path="/merchant/dashboard/*"
           element={<MerchantDashboard />}
         ></Route>
+        <Route path="/merchant/dashboard/profile" element={<Profile />} />
       </Routes>
       <ToastContainer />
     </div>

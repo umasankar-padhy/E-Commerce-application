@@ -1,2 +1,2 @@
-export const url = "https://e-commerce-application-yb87.onrender.com/"
-// export const url = "http://localhost:4000/"
+// export const url = "https://e-commerce-application-yb87.onrender.com/"
+export const url = "http://localhost:5500/"

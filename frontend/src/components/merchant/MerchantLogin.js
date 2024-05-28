@@ -5,13 +5,15 @@ import axios from "axios";
 import { url } from "../../default";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../../redux/auth/authActions";
 
 const MerchantLogin = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,14 +33,17 @@ const MerchantLogin = () => {
       );
 
       if (response.data.success) {
-        if (response.data.token) {
-          localStorage.setItem(
-            "auth",
-            JSON.stringify({ token: response.data.token })
-          );
-          toast.success("Logged in successfully!");
+        if (response.data) {
+          dispatch(setAuth(response.data));
+          localStorage.setItem("auth", JSON.stringify(response.data));
+          toast.success("Logged in successfully!", {
+            position: "top-center",
+            autoClose: 3000, // Adjust the duration as needed
+          });
           // Redirect the user to a specific page after successful login
-          navigate("/merchant/dashboard");
+          setTimeout(() => {
+            navigate("/merchant/dashboard");
+          }, 3000); // Adjust the timeout to match the autoClose duration
         } else {
           toast.error("No token received!");
         }

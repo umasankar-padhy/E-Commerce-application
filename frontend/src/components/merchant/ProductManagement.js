@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Container, Alert } from "react-bootstrap";
-import ProductForm from "./ProductForm";
+import { Link, useNavigate } from "react-router-dom";
+import { Container, Card, Button, Row, Col } from "react-bootstrap";
+import { FaEdit, FaEye, FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { url } from "../../default";
+import { useSelector } from "react-redux";
+import ProductForm from "./ProductForm";
+import ReadMore from "./ReadMore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./ReadMore.css"; 
+import "./ProductManagement.css"; // Import custom CSS for card and image sizing
 
-const ProductManagement = () => {
+const ProductManagement = ({ auth }) => {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [auth, setAuth] = useState({});
-  const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const retrieveAuth = () => {
-    const storedAuth = JSON.parse(localStorage.getItem("auth"));
-    if (storedAuth) {
-      setAuth(storedAuth);
-    }
-  };
+  const navigate = useNavigate();
 
   const fetchProducts = async () => {
     try {
@@ -27,7 +25,10 @@ const ProductManagement = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       };
-      const response = await axios.get(`${url}api/v1/product`, config);
+      const response = await axios.get(
+        `${url}api/v1/product/getProduct`,
+        config
+      );
       if (response.data && response.data.success) {
         setProducts(response.data.data);
       } else {
@@ -40,9 +41,28 @@ const ProductManagement = () => {
     }
   };
 
-  useEffect(() => {
-    retrieveAuth();
-  }, []);
+  const deleteProduct = async (id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      };
+      const response = await axios.delete(
+        `${url}api/v1/product/delete/${id}`,
+        config
+      );
+      if (response.data && response.data.success) {
+        setProducts(products.filter((product) => product._id !== id));
+        toast.success("Product deleted successfully!");
+      } else {
+        throw new Error("Failed to delete product");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Error deleting product!");
+    }
+  };
 
   useEffect(() => {
     if (auth.token) {
@@ -50,74 +70,56 @@ const ProductManagement = () => {
     }
   }, [auth]);
 
-  const addProduct = async (product) => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      };
-      const response = await axios.post(
-        `${url}api/v1/product/create`,
-        product,
-        config
-      );
-      if (response.data && response.data.success) {
-        setProducts([...products, response.data.data]);
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 3000);
-      } else {
-        throw new Error("Failed to add product");
-      }
-    } catch (error) {
-      console.error("Error adding product:", error);
-    }
-  };
-
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
-
   return (
-    <Container>
+    <Container className="mt-4">
+      <ToastContainer />
       <Link to="/merchant/dashboard">Go to Merchant Dashboard</Link>
 
       <h1>Product Management</h1>
 
-      {showAlert && (
-        <Alert
-          variant="success"
-          onClose={() => setShowAlert(false)}
-          dismissible
-        >
-          Product added successfully!
-        </Alert>
-      )}
-
-      <ProductForm addProduct={addProduct} />
+      <ProductForm />
 
       <h2>Product List</h2>
-      <ul>
+      <Row>
         {products.map((product, index) => (
-          <li key={index}>
-            <h3>{product.title}</h3>
-            <p>Price: ${product.price}</p>
-            <p>{product.description}</p>
-            <button onClick={() => addToCart(product)}>Add to Cart</button>
-          </li>
+          <Col md={4} key={index} className="mb-4">
+            <Card className="product-card">
+              <div className="image-container">
+                <Card.Img variant="top" src={product.imageUrl} className="product-image"/>
+              </div>
+              <Card.Body>
+                <Card.Title>{product.title}</Card.Title>
+                <Card.Text>Price: ${product.price}</Card.Text>
+                <Card.Text>
+                  <ReadMore text={product.description} maxLength={100} />
+                </Card.Text>
+                <div className="d-flex justify-content-between">
+                  <Button
+                    variant="info"
+                    as={Link}
+                    to={`/merchant/dashboard/products/view/${product._id}`}
+                  >
+                    <FaEye /> View
+                  </Button>
+                  <Button
+                    variant="warning"
+                    as={Link}
+                    to={`/merchant/dashboard/products/edit/${product._id}`}
+                  >
+                    <FaEdit /> Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => deleteProduct(product._id)}
+                  >
+                    <FaTrashAlt /> Delete
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
-      </ul>
-
-      <h2>Cart</h2>
-      <ul>
-        {cart.map((item, index) => (
-          <li key={index}>
-            <h3>{item.title}</h3>
-            <p>Price: ${item.price}</p>
-            <p>{item.description}</p>
-          </li>
-        ))}
-      </ul>
+      </Row>
     </Container>
   );
 };

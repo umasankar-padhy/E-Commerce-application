@@ -1,0 +1,14 @@
+.read-more-button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-size: inherit;
+  }
+  
+  .read-more-button:hover {
+    color: darkblue;
+  }
+  

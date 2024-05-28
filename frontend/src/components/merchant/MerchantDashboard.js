@@ -3,8 +3,13 @@ import { Routes, Route, Link } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { BsPersonCircle } from "react-icons/bs"; // Import profile icon
 import ProductManagement from "./ProductManagement";
+import ProductView from "./ProductView"; // Import the ProductView component
+import ProductEdit from "./ProductEdit"; // Import the ProductEdit component
+import { useSelector } from "react-redux";
 
 const MerchantDashboard = () => {
+  const auth = useSelector((state) => state.auth);
+
   return (
     <div>
       {/* Navbar with profile icon and product options */}
@@ -37,7 +42,9 @@ const MerchantDashboard = () => {
       <Container className="mt-4">
         <Routes>
           {/* Route for the ProductManagement component */}
-          <Route path="products" element={<ProductManagement />} />
+          <Route path="products" element={<ProductManagement auth={auth} />} />
+          <Route path="products/view/:id" element={<ProductView />} />
+          <Route path="products/edit/:id" element={<ProductEdit auth={auth} />} />
         </Routes>
       </Container>
     </div>
