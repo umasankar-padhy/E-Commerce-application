@@ -4,7 +4,7 @@ const Merchant = require("../models/Merchant");
 // Create a new product
 exports.createProduct = async (req, res) => {
     try {
-        const { title, description, imageUrl, price, quantity, size, color, isActive, MFG_Date, EXP_Date, productId, brand, category, rating } = req.body;
+        const { title, description, imageUrl, price, quantity, size, color, isActive, MFG_Date, EXP_Date, productId, brand, category } = req.body;
 
         // Check if the merchant exists
         const merchant = await Merchant.findById(req.merchantId);

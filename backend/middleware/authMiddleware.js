@@ -22,7 +22,7 @@ exports.requireSignIn = (req, res, next) => {
        if (payload.role === "merchant")
         req.merchantId = payload.id;
       // console.log(req.userId)
-      // console.log(req.merchantId)
+      console.log(req.merchantId)
     } catch (error) {
      
       return res.status(401).json({
