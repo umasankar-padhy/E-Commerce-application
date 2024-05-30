@@ -106,7 +106,7 @@ exports.login = async (req, res) => {
         };
         if (await bcrypt.compare(password, user.password)) {
             let token = jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn: "7d",
+                expiresIn: "12d",
             });
             // // Attach the token to the user object (for response) and set a cookie with the token
             // user = user.toObject();

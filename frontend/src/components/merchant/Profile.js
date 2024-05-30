@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Button, Row, Col, Alert } from "react-bootstrap";
+import { Container, Form, Button, Row, Col, Alert, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { url } from "../../default";
 import { useSelector } from "react-redux";
@@ -17,21 +17,24 @@ const Profile = () => {
   const [alertVariant, setAlertVariant] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch merchant profile data on component mount
-    fetchProfile();
-  }, []);
+    if (!(Object.keys(auth).length === 0)) {fetchProfile(); }
+    
+  }, [auth]);
 
   const fetchProfile = async () => {
     try {
       setLoading(true);
+      console.log(1)
       const response = await axios.get(`${url}api/v1/merchant/getProfile`, {
         headers: {
-          Authorization: `Bearer ${auth?.token}`,
+          Authorization: `Bearer ${auth.token}`,
         },
       });
+      console.log(2)
       if (response.data && response.data.success) {
         const { name, phoneNo, alternatePhoneNo } = response.data.data;
         setProfileData({ name, phoneNo, alternatePhoneNo });
@@ -59,6 +62,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axios.put(
         `${url}api/v1/merchant/updateProfile`,
         profileData,
@@ -72,6 +76,8 @@ const Profile = () => {
         setShowAlert(true);
         setAlertVariant("success");
         setAlertMessage(response.data.message);
+        // Re-fetch profile data to ensure the state is updated
+        fetchProfile();
       } else {
         throw new Error(response.data.message);
       }
@@ -80,16 +86,19 @@ const Profile = () => {
       setShowAlert(true);
       setAlertVariant("danger");
       setAlertMessage("Failed to update profile");
+    } finally {
+      setLoading(false);
     }
   };
 
   const redirectToDashboard = () => {
-    navigate("/merchant/dashboard"); // Use navigate instead of history.push
+    navigate("/merchant/dashboard");
   };
 
   return (
     <Container>
       <h1 className="my-4">Merchant Profile</h1>
+      {loading && <Spinner animation="border" variant="primary" />}
       {showAlert && <Alert variant={alertVariant}>{alertMessage}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Row className="mb-3">
@@ -130,13 +139,14 @@ const Profile = () => {
             />
           </Form.Group>
         </Row>
-        <Button variant="primary" type="submit" className="me-2">
+        <Button variant="primary" type="submit" className="me-2" disabled={loading}>
           Update Profile
         </Button>
         <Button
           variant="secondary"
           onClick={redirectToDashboard}
           className="custom-dashboard-button"
+          disabled={loading}
         >
           Go to Dashboard
         </Button>
