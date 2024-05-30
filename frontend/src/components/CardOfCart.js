@@ -11,7 +11,6 @@ export default function CardOfCart({ item }) {
     const dispatch = useDispatch();
 
     async function handleRemoveFromCart() {
-        
         try {
             setLoading(true);
             const res = await axios.delete(`${url}api/v1/cart/remove-from-cart`, {
@@ -39,19 +38,19 @@ export default function CardOfCart({ item }) {
             <div className="row g-0">
                 <div className="col-md-4">
                     <img
-                        src={item.product_id.imageUrl}
+                        src={item.product_id?.imageUrl}
                         className="img-fluid rounded-start"
-                        alt={item.product_id.name}
+                        alt={item.product_id?.name}
                     />
                 </div>
                 <div className="col-md-8">
                     <div className="card-body">
-                        <h5 className="card-title">{item.product_id.title}</h5>
-                        <p className="card-text">Price: &#8377; {item.product_id.price}/-</p>
-                        <p className="card-text">Quantity: {item.quantity}</p>
+                        <h5 className="card-title">{item.product_id?.title}</h5>
+                        <p className="card-text">Price: &#8377; {item.product_id?.price || 'N/A'}/-</p>
+                        <p className="card-text">Quantity: {item.quantity || 'N/A'}</p>
                         <p className="card-text">
                             <small className="text-muted">Size: {item.size || 'N/A'}</small>
-                        <span>  </span>
+                            <span>  </span>
                             <small className="text-muted">Color: {item.color || 'N/A'}</small>
                         </p>
                         <button
@@ -59,7 +58,6 @@ export default function CardOfCart({ item }) {
                             onClick={handleRemoveFromCart}
                             disabled={loading}
                         >
-                            {/* {item.isAdded ? (loading ? 'Removing...' : 'Remove from Cart') : (loading ? 'Adding...' : 'add to Cart')} */}
                             {loading ? 'Removing...' : 'Remove from Cart'}
                         </button>
                     </div>

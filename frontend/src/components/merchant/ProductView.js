@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Container, Card, Row, Col } from "react-bootstrap";
+import { Container, Card, Row, Col, Carousel } from "react-bootstrap";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { url } from "../../default";
+import './ProductView.css'; // Import the CSS file
 
 const ProductView = () => {
   const { id } = useParams();
@@ -33,12 +35,29 @@ const ProductView = () => {
         <Card.Header as="h5">{product.title}</Card.Header>
         <Card.Body>
           <Row>
-            <Col md={4} className="d-flex align-items-center">
-              <Card.Img
-                variant="top"
-                src={product.imageUrl}
-                className="img-fluid rounded"
-              />
+            <Col md={4}>
+              <Carousel
+                prevIcon={
+                  <FaArrowAltCircleLeft
+                    style={{ fontSize: "2rem", color: "#000" }}
+                  />
+                }
+                nextIcon={
+                  <FaArrowAltCircleRight
+                    style={{ fontSize: "2rem", color: "#000" }}
+                  />
+                }
+              >
+                {product.imageUrl.map((image, index) => (
+                  <Carousel.Item key={index}>
+                    <img
+                      className="d-block w-100 product-image"
+                      src={image}
+                      alt={product.title}
+                    />
+                  </Carousel.Item>
+                ))}
+              </Carousel>
             </Col>
             <Col md={8}>
               <Card.Text>

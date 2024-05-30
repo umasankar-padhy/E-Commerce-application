@@ -1,0 +1,5 @@
+.product-image {
+    height: 300px; /* Set a fixed height for the images */
+    object-fit: cover; /* Ensure the image covers the area without stretching */
+  }
+  

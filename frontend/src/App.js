@@ -14,6 +14,9 @@ import MerchantSignupPage from "./components/merchant/MerchantSignup";
 import MerchantLogin from "./components/merchant/MerchantLogin";
 import MerchantDashboard from "./components/merchant/MerchantDashboard";
 import Profile from "./components/merchant/Profile";
+import ForgotPassword from "./components/merchant/ForgotPassword";
+import ResetPassword from "./components/merchant/ResetPassword";
+import CommentPage from "./components/CommentsPage"; // Import the CommentPage component
 
 function App() {
   return (
@@ -26,15 +29,15 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
-        {/* <Route path="/cart" element={<Cart />}></Route> */}
         <Route path="/cart" element={<PrivateRoute element={Cart} />} />
         <Route path="/merchant/signup" element={<MerchantSignupPage />} />
         <Route path="/merchant/login" element={<MerchantLogin />} />
-        <Route
-          path="/merchant/dashboard/*"
-          element={<MerchantDashboard />}
-        ></Route>
+        <Route path="/merchant/forgot-password" element={<ForgotPassword />} />
+        <Route path="/merchant/reset-password" element={<ResetPassword />} />
+        <Route path="/merchant/dashboard/*" element={<MerchantDashboard />} />
         <Route path="/merchant/dashboard/profile" element={<Profile />} />
+        {/* Include the comment page route */}
+        <Route path="/product/:id/comments" element={<CommentPage />} />
       </Routes>
       <ToastContainer />
     </div>
