@@ -194,6 +194,33 @@ exports.getProduct = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
+// Get product by ID
+exports.getProductById = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await Product.findById(productId).populate('merchant_id', 'name email');
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: product,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error retrieving product",
+        });
+    }
+};
+=======
 // // Get product by ID
 // exports.getProductById = async (req, res) => {
 //     try {
@@ -219,6 +246,7 @@ exports.getProduct = async (req, res) => {
 //         });
 //     }
 // };
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
 exports.getProductByMerchant = async (req, res) => {
     try {

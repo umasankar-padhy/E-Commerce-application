@@ -31,6 +31,12 @@ const merchantSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Address'
     }],
+    otp: {
+        type: String,
+    },
+    otpExpires: {
+        type: Date,
+    },
     merchantId: {
         type: String,
         // required: true,

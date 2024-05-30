@@ -39,7 +39,13 @@ const MerchantLogin = () => {
           localStorage.setItem("auth", JSON.stringify(response.data));
           toast.success("Logged in successfully!");
           // Redirect the user to a specific page after successful login
+<<<<<<< HEAD
+          setTimeout(() => {
+            navigate("/merchant/dashboard");
+          }, 2000); // Adjust the timeout to match the autoClose duration
+=======
           navigate("/merchant/dashboard");
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
         } else {
           toast.error("No token received!");
         }
@@ -88,6 +94,9 @@ const MerchantLogin = () => {
           <p>
             Don't have an account? <Link to="/merchant/signup">Sign up</Link>
           </p>
+          <p className="text-center mt-3">
+          <Link to="/merchant/forgot-password">Forgot password?</Link>
+        </p>
         </div>
       </Card>
     </Container>

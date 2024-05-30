@@ -1,0 +1,13 @@
+.welcome-message {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .welcome-message h1 {
+    margin-bottom: 20px;
+  }
+  
+  .welcome-message p {
+    margin-bottom: 20px;
+  }
+  

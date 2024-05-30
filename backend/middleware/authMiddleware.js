@@ -1,46 +1,63 @@
-const jwt = require("jsonwebtoken"); 
-require("dotenv").config(); 
-
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 exports.requireSignIn = (req, res, next) => {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "") || req.headers.authorization;
+    const authHeader = req.header("Authorization") || req.headers.authorization;
 
-  
-    if (!token || token === undefined) {
+    if (!authHeader) {
       return res.status(401).json({
         success: false,
-        Message: "Token missing",
+        message: "Authorization header is missing",
       });
     }
 
-    
+    const token = authHeader.replace("Bearer ", "");
+
+    if (!token || token === "undefined") {
+      return res.status(401).json({
+        success: false,
+        message: "Token is missing or undefined",
+      });
+    }
+
     try {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
-      if (payload.role === "user")
+
+      if (payload.role === "user") {
         req.userId = payload.id;
+<<<<<<< HEAD
+      } else if (payload.role === "merchant") {
+        req.merchantId = payload.id;
+      } else {
+        return res.status(401).json({
+          success: false,
+          message: "Token role is invalid",
+        });
+      }
+      
+      next();
+=======
       req.user = payload.email;
        if (payload.role === "merchant")
         req.merchantId = payload.id;
       // console.log(req.userId)
       // console.log(req.user)
       // console.log(req.merchantId)
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
     } catch (error) {
-     
+      console.error("Token verification error:", error.message);
       return res.status(401).json({
         success: false,
-        Message: "Token is invalid",
+        message: "Token is invalid",
+        error: error.message,
       });
     }
-
-    
-
-    next();
   } catch (error) {
-    
-    return res.status(401).json({
+    console.error("Error in requireSignIn middleware:", error.message);
+    return res.status(500).json({
       success: false,
-      Message: "Something went wrong while verifying the token",
+      message: "Something went wrong while verifying the token",
       error: error.message,
     });
   }

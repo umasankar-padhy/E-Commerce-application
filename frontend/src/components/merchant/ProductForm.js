@@ -16,7 +16,6 @@ const ProductForm = ({ addProduct }) => {
   const [productData, setProductData] = useState({
     title: "",
     description: "",
-    imageUrl: "",
     price: "",
     quantity: "",
     size: "",
@@ -28,7 +27,12 @@ const ProductForm = ({ addProduct }) => {
     rating: 0,
   });
 
+<<<<<<< HEAD
+  const [selectedImages, setSelectedImages] = useState([]);
+  const auth = useSelector((state) => state.auth);
+=======
   const [showAlert, setShowAlert] = useState(false);
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,20 +42,43 @@ const ProductForm = ({ addProduct }) => {
     });
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedImages(files);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formData = new FormData();
+      selectedImages.forEach(image => {
+        formData.append("images", image);
+      });
+      Object.keys(productData).forEach(key => {
+        formData.append(key, productData[key]);
+      });
+
       const response = await axios.post(
         `${url}api/v1/product/create`,
+<<<<<<< HEAD
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+=======
         productData
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
       );
+
       if (response.data && response.data.success) {
         addProduct(response.data.data);
         setShowAlert(true); // Show success alert
         setProductData({
           title: "",
           description: "",
-          imageUrl: "",
           price: "",
           quantity: "",
           size: "",
@@ -62,7 +89,11 @@ const ProductForm = ({ addProduct }) => {
           category: "",
           rating: 0,
         });
+<<<<<<< HEAD
+        setSelectedImages([]);
+=======
         setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
       } else {
         throw new Error("Failed to add product");
       }
@@ -112,15 +143,13 @@ const ProductForm = ({ addProduct }) => {
                   />
                 </Form.Group>
 
-                <Form.Group controlId="imageUrl" className="mb-3">
-                  <Form.Label>Image URL</Form.Label>
+                <Form.Group controlId="imageUrls" className="mb-3">
+                  <Form.Label>Images</Form.Label>
                   <Form.Control
-                    type="text"
-                    placeholder="Enter image URL"
-                    name="imageUrl"
-                    value={productData.imageUrl}
-                    onChange={handleChange}
-                    required
+                    type="file"
+                    multiple
+                    name="images"
+                    onChange={handleImageChange}
                     className="custom-input"
                   />
                 </Form.Group>
