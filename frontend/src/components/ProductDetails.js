@@ -111,7 +111,7 @@ export default function ProductDetails() {
   return (
     <div>
       <Navbarr />
-      {/* <pre>{JSON.stringify(product, null, 4)}</pre>  */}
+      <pre>{JSON.stringify(product, null, 4)}</pre> 
 
       {loading?<Spinner />:
         <div className="d-flex flex-wrap justify-content-center">

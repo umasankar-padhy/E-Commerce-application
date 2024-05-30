@@ -40,6 +40,11 @@ const productSchema = new mongoose.Schema({
     ref: 'Merchant',
     required: true
   },
+  comment_ids: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment',
+    // required: true
+  }],
   MFG_Date: {
     type: Date,
     required: true

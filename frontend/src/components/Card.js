@@ -83,7 +83,7 @@ export default function Card({ item }) {
             console.error("Error:", err);
         }
     }
-    const cartItem = cart.find(cartItem => cartItem.product_id._id === item._id);
+    const cartItem = cart.find(cartItem => cartItem?.product_id?._id === item?._id);
     const isProductInCart = Boolean(cartItem);
     const isOrdered = cartItem?.isOrdered;
 
@@ -91,7 +91,7 @@ export default function Card({ item }) {
         <div>
             <div className="card m-2" style={{ width: "16rem" }} key={item._id}>
                 <img
-                    src={item.imageUrl}
+                    src={item.imageUrl[0]}
                     className="card-img-top"
                     alt={item.title}
                     style={{ height: "12rem" }}></img>
