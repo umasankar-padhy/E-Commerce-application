@@ -26,6 +26,7 @@ exports.requireSignIn = (req, res, next) => {
 
       if (payload.role === "user") {
         req.userId = payload.id;
+<<<<<<< HEAD
       } else if (payload.role === "merchant") {
         req.merchantId = payload.id;
       } else {
@@ -36,6 +37,14 @@ exports.requireSignIn = (req, res, next) => {
       }
       
       next();
+=======
+      req.user = payload.email;
+       if (payload.role === "merchant")
+        req.merchantId = payload.id;
+      // console.log(req.userId)
+      // console.log(req.user)
+      // console.log(req.merchantId)
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
     } catch (error) {
       console.error("Token verification error:", error.message);
       return res.status(401).json({

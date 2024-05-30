@@ -1,6 +1,8 @@
 const Product = require("../models/Product");
 const Merchant = require("../models/Merchant");
 const cloudinary = require("cloudinary").v2;
+const Comment = require("../models/Comment");
+
 
 function isFileTypeSupported(type, supportedTypes) {
     return supportedTypes.includes(type);
@@ -192,6 +194,7 @@ exports.getProduct = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
 // Get product by ID
 exports.getProductById = async (req, res) => {
     try {
@@ -217,6 +220,33 @@ exports.getProductById = async (req, res) => {
         });
     }
 };
+=======
+// // Get product by ID
+// exports.getProductById = async (req, res) => {
+//     try {
+//         const productId = req.params.id;
+//         const product = await Product.findById(productId).populate('merchant_id', 'name email');
+
+//         if (!product) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Product not found",
+//             });
+//         }
+
+//         return res.status(200).json({
+//             success: true,
+//             data: product,
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({
+//             success: false,
+//             message: "Error retrieving product",
+//         });
+//     }
+// };
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
 exports.getProductByMerchant = async (req, res) => {
     try {
@@ -418,3 +448,128 @@ exports.deleteImage = async (req, res) => {
         });
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const populateCommentsRecursively = async (comment) => {
+    if (!comment.comment_ids || comment.comment_ids.length === 0) {
+        return comment;
+    }
+
+    // Populate the nested comments
+    comment.comment_ids = await Comment.find({ _id: { $in: comment.comment_ids } }).lean();
+
+    // Recursively populate for each nested comment
+    for (let i = 0; i < comment.comment_ids.length; i++) {
+        comment.comment_ids[i] = await populateCommentsRecursively(comment.comment_ids[i]);
+    }
+
+    return comment;
+};
+
+const populateProductComments = async (productId) => {
+    try {
+        // Fetch the product by ID and populate the comment_ids field with actual comments
+        const product = await Product.findById(productId).populate('comment_ids').lean();
+
+        // If product not found, return null
+        if (!product) {
+            return null;
+        }
+
+        // Recursively populate the comments
+        for (let i = 0; i < product.comment_ids.length; i++) {
+            product.comment_ids[i] = await populateCommentsRecursively(product.comment_ids[i]);
+        }
+
+        return product;
+    } catch (error) {
+        throw new Error("Error populating product comments: " + error.message);
+    }
+};
+
+
+
+exports.getProductById = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await populateProductComments(productId);
+
+        // const product = await Product.findById(productId).populate({
+        //     path: 'comment_ids',
+        //     populate: {
+        //         path: 'comment_ids',
+        //         model: 'Comment',
+        //         populate: {
+        //             path: 'comment_ids',
+        //             model: 'Comment',
+        //             populate: {
+        //                 path: 'comment_ids',
+        //                 model: 'Comment',
+        //                 populate: {
+        //                     path: 'comment_ids',
+        //                     model: 'Comment',
+        //                     populate: {
+        //                         path: 'comment_ids',
+        //                         model: 'Comment',
+        //                         populate: {
+        //                             path: 'comment_ids',
+        //                             model: 'Comment',
+        //                             populate: {
+        //                                 path: 'comment_ids',
+        //                                 model: 'Comment',
+        //                                 populate: {
+        //                                     path: 'comment_ids',
+        //                                     model: 'Comment'
+        //                                 }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }).lean();
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: product,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error retrieving product",
+        });
+    }
+};
+
+
+
+
+
+
+

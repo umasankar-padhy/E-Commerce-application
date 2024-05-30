@@ -97,6 +97,25 @@ exports.resetPassword = async (req, res) => {
                 message: "Invalid OTP",
             });
         }
+<<<<<<< HEAD
+=======
+        let hashPassword;
+        try {
+            hashPassword = await bcrypt.hash(password, 10);
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Error in hashing password",
+            });
+        }
+        const merchant = await Merchant.create({
+            name,
+            phoneNo,
+            alternatePhoneNo,
+            email,
+            password: hashPassword, 
+        });
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
         // Check if the OTP has expired
         if (Date.now() > merchant.otpExpires) {

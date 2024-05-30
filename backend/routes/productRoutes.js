@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const commentController = require('../controllers/commentController');
@@ -10,8 +11,6 @@ const {
   deleteProduct,
   getProductByMerchant,
   deleteImage
-
-
 } = require("../controllers/productController");
 
 router.post("/create", requireSignIn, createProduct); // Protected route to create a new product

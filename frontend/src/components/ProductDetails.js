@@ -69,9 +69,16 @@ export default function ProductDetails() {
         }
     }
 
+<<<<<<< HEAD
     // Function to handle updating the quantity of the product in the cart
     async function handleUpdateCartItem(e) {
         e.preventDefault();
+=======
+  return (
+    <div>
+      <Navbarr />
+      <pre>{JSON.stringify(product, null, 4)}</pre> 
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
         try {
             setLoading(true);

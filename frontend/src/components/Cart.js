@@ -14,6 +14,13 @@ export default function Cart() {
     .filter(item => item.product_id && !item.isOrdered)
     .reduce((total, item) => total + (item.product_id.price * item.quantity), 0);
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
     const handleCheckOut = async (e) => {
         e.preventDefault();
 
@@ -25,6 +32,7 @@ export default function Cart() {
             // Extract product IDs and merchant IDs
             const cartIds = cart.map(item => item._id);
             const merchantIds = cart.map(item => item.product_id.merchant_id);
+<<<<<<< HEAD
             const addressId ="664e291f890c7e8ff8cc40c5";
 
 
@@ -32,12 +40,23 @@ export default function Cart() {
                 `${url}api/v1/order/create`,
                 { cartIds, addressId, products },
                 {
+=======
+            const addressId ="664e291f890c7e8ff8cc40c5"
+
+
+            const response = await axios.post(`${url}api/v1/order/create`,  {cartIds,addressId,products} ,
+              {
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
                     headers: {
                         Authorization: `Bearer ${auth?.token}`
                     }
                 }
             );
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
             if (response.data.success) {
                 // Clear the cart after successful checkout
                 // dispatch any action to clear the cart state if needed
@@ -45,9 +64,30 @@ export default function Cart() {
                 // Handle error, show error message, etc.
             }
         } catch (error) {
+<<<<<<< HEAD
             // Handle error
         }
     };
+=======
+        } 
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const inCartItems = cart.filter(item => item.isAdded);
+    // const removedItems = cart.filter(item => !item.isAdded);
+>>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
     return (
         <div>
