@@ -46,6 +46,14 @@ app.use("/api/v1/product", productRoutes);
 const cartRoutes = require("./routes/cartRoutes");
 app.use("/api/v1/cart", cartRoutes);
 
+const notificationRoutes = require("./routes/notificationRoutes");
+app.use("/api/v1/notification", notificationRoutes);
+
+const orderRoutes = require("./routes/orderRoutes");
+app.use("/api/v1/order", orderRoutes);
+
+const commentRoutes = require("./routes/commentRoutes");
+app.use("/api/v1/comment", commentRoutes);
 
 dbConnect();
 

@@ -36,8 +36,7 @@ exports.MerchantSignUp = async (req, res) => {
             phoneNo,
             alternatePhoneNo,
             email,
-            password: hashPassword,
-           
+            password: hashPassword, 
         });
 
         return res.status(201).json({

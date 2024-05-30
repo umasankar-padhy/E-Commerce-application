@@ -6,15 +6,13 @@ import {
   Row,
   Col,
   Button,
+  Alert,
 } from "react-bootstrap";
 import axios from "axios";
 import { url } from "../../default";
 import "./ProductForm.css"; // Import the custom CSS file
-import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-const ProductForm = () => {
+const ProductForm = ({ addProduct }) => {
   const [productData, setProductData] = useState({
     title: "",
     description: "",
@@ -30,7 +28,7 @@ const ProductForm = () => {
     rating: 0,
   });
 
-  const auth = useSelector((state) => state.auth);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,15 +43,11 @@ const ProductForm = () => {
     try {
       const response = await axios.post(
         `${url}api/v1/product/create`,
-        productData,
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
-          },
-        }
+        productData
       );
       if (response.data && response.data.success) {
-        toast.success("Product added successfully!");
+        addProduct(response.data.data);
+        setShowAlert(true); // Show success alert
         setProductData({
           title: "",
           description: "",
@@ -68,20 +62,23 @@ const ProductForm = () => {
           category: "",
           rating: 0,
         });
+        setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
       } else {
         throw new Error("Failed to add product");
       }
     } catch (error) {
       console.error("Error adding product:", error);
-      toast.error("Error adding product!");
     }
   };
-
   return (
     <Container className="mt-5">
-      <ToastContainer />
       <Row className="justify-content-md-center">
         <Col md={8}>
+          {showAlert && (
+            <Alert variant="success" className="custom-alert">
+              Product added successfully!
+            </Alert>
+          )}
           <Card className="product-form-card">
             <Card.Header className="bg-primary text-white text-center">
               Add New Product
@@ -104,7 +101,8 @@ const ProductForm = () => {
                 <Form.Group controlId="description" className="mb-3">
                   <Form.Label>Description</Form.Label>
                   <Form.Control
-                    type="text"
+                    as="textarea"
+                    rows={3}
                     placeholder="Enter description"
                     name="description"
                     value={productData.description}
