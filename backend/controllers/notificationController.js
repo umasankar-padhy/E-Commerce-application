@@ -45,35 +45,7 @@ exports.createNotification = async (req, res) => {
     }
 };
 
-// // controllers/notificationController.js
-// const Notification = require('../models/notification');
-
-// // Create a new notification
-// exports.createNotification = async (req, res) => {
-//     try {
-//         console.log( req.body);
-
-//         const notification = new Notification({
-//             merchant_id,
-//             product_id,
-//             order_id,
-//             isseen
-//         });
-
-//       const noti=  await notification.save();
-//         return res.status(201).json({
-//             success:true,
-//             data: noti
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({
-//             error,
-//             success: false,
-//             message: "Error creating address",
-//         });
-//     }
-// };
+// 
 
 // Get all notifications
 exports.getAllNotifications = async (req, res) => {

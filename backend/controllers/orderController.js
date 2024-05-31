@@ -6,7 +6,7 @@ const Cart = require('../models/Cart');
 exports.createOrder = async (req, res,next) => {
     try {
         const userId = req.userId;
-console.log(req.body)
+// console.log(req.body)
         // Get cart IDs array from the request body
         const { cartIds, addressId } = req.body;
 

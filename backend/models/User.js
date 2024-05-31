@@ -33,7 +33,12 @@ const userSchema = new mongoose.Schema({
   cart_id: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cart'
-  }]
+  }], otp: {
+    type: String,
+  },
+  otpExpires: {
+    type: Date,
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

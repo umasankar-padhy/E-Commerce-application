@@ -13,14 +13,12 @@ import PrivateRoute from "./components/PrivateRoute";
 import MerchantSignupPage from "./components/merchant/MerchantSignup";
 import MerchantLogin from "./components/merchant/MerchantLogin";
 import MerchantDashboard from "./components/merchant/MerchantDashboard";
-<<<<<<< HEAD
 import Profile from "./components/merchant/Profile";
 import ForgotPassword from "./components/merchant/ForgotPassword";
 import ResetPassword from "./components/merchant/ResetPassword";
 import CommentPage from "./components/CommentsPage"; // Import the CommentPage component
-=======
 import NotificationPage from "./components/merchant/NotificationPage";
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
+import Orderpage from "./components/Orderpage";
 
 function App() {
   return (
@@ -36,18 +34,15 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/cart" element={<PrivateRoute element={Cart} />} />
+        <Route path="/order" element={<PrivateRoute element={Orderpage} />} />
         <Route path="/merchant/signup" element={<MerchantSignupPage />} />
         <Route path="/merchant/login" element={<MerchantLogin />} />
-<<<<<<< HEAD
         <Route path="/merchant/forgot-password" element={<ForgotPassword />} />
         <Route path="/merchant/reset-password" element={<ResetPassword />} />
         <Route path="/merchant/dashboard/*" element={<MerchantDashboard />} />
         <Route path="/merchant/dashboard/profile" element={<Profile />} />
         {/* Include the comment page route */}
         <Route path="/product/:id/comments" element={<CommentPage />} />
-=======
-        <Route path="/merchant/dashboard/*" element={<MerchantDashboard />} />
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
       </Routes>
       <ToastContainer />
     </div>

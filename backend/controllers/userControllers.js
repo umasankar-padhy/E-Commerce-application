@@ -2,6 +2,21 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
+const nodemailer = require("nodemailer");
+
+var transport = nodemailer.createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+        user: "d81ff9a54f3fd8",
+        pass: "79f954ae6442c1"
+    }
+});
+const generateOtp = () => {
+    return Math.floor(1000 + Math.random() * 9000);
+};
+
+
 
 //controller for new user registration
 exports.signup = async (req, res) => {
@@ -215,6 +230,139 @@ exports.updateProfile = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Error updating user profile",
+        });
+    }
+};
+
+
+
+
+
+
+// Reset password for user
+exports.resetPassword = async (req, res) => {
+    try {
+        const { email, otp, password, confirmPassword } = req.body;
+
+        // Check if all required fields are provided
+        if (!email || !otp || !password || !confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all required details",
+            });
+        }
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+
+        // Check if the OTP matches
+        if (user.otp !== otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid OTP",
+            });
+        }
+
+        // Check if the OTP has expired
+        if (Date.now() > user.otpExpires) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP has expired",
+            });
+        }
+
+        // Check if the new password matches the confirmation password
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Passwords do not match",
+            });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Update the user's password
+        user.password = hashedPassword;
+
+        // Clear the OTP and OTP expiration time
+        user.otp = undefined;
+        user.otpExpires = undefined;
+
+        // Save the updated user
+        await user.save();
+
+        // Return success response
+        return res.status(200).json({
+            success: true,
+            message: "Password reset successfully",
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error resetting password",
+        });
+    }
+};
+// Forget password
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+
+        // Generate a 4-digit OTP
+        const otp = generateOtp();
+        const otpExpires = Date.now() + 3600000; // 1 hour from now
+
+        // Save the OTP and its expiration time to the user document
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save();
+
+        // Configure the email options
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.email,
+            subject: "Password Reset OTP",
+            text: `Your OTP for password reset is ${otp}. It is valid for 1 hour.`,
+        };
+
+        // Send the email using transport.sendMail
+        transport.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending email:", error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error sending OTP",
+                });
+            } else {
+                console.log("Email sent:", info.response);
+                return res.status(200).json({
+                    success: true,
+                    message: "OTP sent to your email",
+                });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error sending OTP",
         });
     }
 };

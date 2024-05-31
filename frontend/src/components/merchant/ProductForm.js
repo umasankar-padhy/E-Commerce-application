@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import axios from "axios";
+import { useSelector } from "react-redux"; // Import useSelector hook
 import { url } from "../../default";
 import "./ProductForm.css"; // Import the custom CSS file
 
@@ -27,12 +28,9 @@ const ProductForm = ({ addProduct }) => {
     rating: 0,
   });
 
-<<<<<<< HEAD
   const [selectedImages, setSelectedImages] = useState([]);
-  const auth = useSelector((state) => state.auth);
-=======
   const [showAlert, setShowAlert] = useState(false);
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
+  const auth = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,16 +49,15 @@ const ProductForm = ({ addProduct }) => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      selectedImages.forEach(image => {
+      selectedImages.forEach((image) => {
         formData.append("images", image);
       });
-      Object.keys(productData).forEach(key => {
+      Object.keys(productData).forEach((key) => {
         formData.append(key, productData[key]);
       });
 
       const response = await axios.post(
         `${url}api/v1/product/create`,
-<<<<<<< HEAD
         formData,
         {
           headers: {
@@ -68,9 +65,6 @@ const ProductForm = ({ addProduct }) => {
             "Content-Type": "multipart/form-data",
           },
         }
-=======
-        productData
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
       );
 
       if (response.data && response.data.success) {
@@ -89,11 +83,8 @@ const ProductForm = ({ addProduct }) => {
           category: "",
           rating: 0,
         });
-<<<<<<< HEAD
         setSelectedImages([]);
-=======
         setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
       } else {
         throw new Error("Failed to add product");
       }
@@ -101,6 +92,7 @@ const ProductForm = ({ addProduct }) => {
       console.error("Error adding product:", error);
     }
   };
+
   return (
     <Container className="mt-5">
       <Row className="justify-content-md-center">
