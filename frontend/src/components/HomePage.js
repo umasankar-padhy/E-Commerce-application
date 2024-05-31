@@ -14,6 +14,7 @@ export default function HomePage() {
 
     //get products
     const getAllProducts = async () => {
+        
         try {
             setLoading(true);
             const { data } = await axios.get(`${url}api/v1/product/get`);
