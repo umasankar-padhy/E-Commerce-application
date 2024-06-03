@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { url } from '../default';
 
 function Comment({ comment, handleLike, handleDislike, handleReply }) {
@@ -7,19 +8,18 @@ function Comment({ comment, handleLike, handleDislike, handleReply }) {
         <div className="mb-3">
             <div className="card">
                 <div className="card-body">
-                    <p className="card-text">{comment.text}</p>
-                    <button className="btn btn-primary me-2" onClick={() => handleLike(comment._id)}>Like</button>
-                    <button className="btn btn-danger me-2" onClick={() => handleDislike(comment._id)}>Dislike</button>
+                    <p className="card-text">{comment.comment}</p>
+                    {/* <button className="btn btn-primary me-2" onClick={() => handleLike(comment._id)}>Like</button>
+                    <button className="btn btn-danger me-2" onClick={() => handleDislike(comment._id)}>Dislike</button> */}
                     <button className="btn btn-secondary" onClick={() => handleReply(comment._id)}>Reply</button>
                 </div>
             </div>
-            {/* Display replies */}
-            {comment.replies.map(reply => (
+            {comment.comment_ids && comment.comment_ids.map(reply => (
                 <div className="card ms-5 mt-3" key={reply._id}>
                     <div className="card-body">
-                        <p className="card-text">{reply.text}</p>
-                        <button className="btn btn-primary me-2" onClick={() => handleLike(comment._id, reply._id)}>Like</button>
-                        <button className="btn btn-danger" onClick={() => handleDislike(comment._id, reply._id)}>Dislike</button>
+                        <p className="card-text">{reply.comment}</p>
+                        {/* <button className="btn btn-primary me-2" onClick={() => handleLike(reply._id)}>Like</button>
+                        <button className="btn btn-danger" onClick={() => handleDislike(reply._id)}>Dislike</button> */}
                     </div>
                 </div>
             ))}
@@ -30,55 +30,57 @@ function Comment({ comment, handleLike, handleDislike, handleReply }) {
 function CommentSection({ productId }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const auth = useSelector(state => state.auth);
 
-    // Function to fetch comments for the product
     const fetchComments = async () => {
         try {
-            const response = await axios.get(`${url}api/v1/products/${productId}/comments`);
-            setComments(response.data);
+            const response = await axios.get(`${url}api/v1/comment/product/${productId}/comments`);
+            setComments(response.data.data); // Assuming comments data is nested under 'data'
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
     };
 
-    // Function to handle adding a new comment
     const handleAddComment = async () => {
+        if (!auth?.token) {
+            alert('Please log in to add a comment.');
+            return;
+        }
         try {
-            await axios.post(`${url}api/v1/products/${productId}/comments`, { text: newComment });
+            await axios.post(`${url}api/v1/comment/create`, { product_id: productId, comment: newComment }, {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`,
+                },
+            });
             setNewComment('');
-            fetchComments(); // Refresh comments after adding a new one
+            fetchComments();
         } catch (error) {
             console.error('Error adding comment:', error);
         }
     };
 
-    // Function to handle liking a comment or reply
-    const handleLike = async (commentId, replyId = null) => {
-        try {
-            await axios.post(`${url}api/v1/products/${productId}/comments/${commentId}/like`, { replyId });
-            fetchComments(); // Refresh comments after liking
-        } catch (error) {
-            console.error('Error liking comment/reply:', error);
-        }
+    const handleLike = async (commentId) => {
+        // Implement like functionality
     };
 
-    // Function to handle disliking a comment or reply
-    const handleDislike = async (commentId, replyId = null) => {
-        try {
-            await axios.post(`${url}api/v1/products/${productId}/comments/${commentId}/dislike`, { replyId });
-            fetchComments(); // Refresh comments after disliking
-        } catch (error) {
-            console.error('Error disliking comment/reply:', error);
-        }
+    const handleDislike = async (commentId) => {
+        // Implement dislike functionality
     };
 
-    // Function to handle replying to a comment
     const handleReply = async (commentId) => {
+        if (!auth?.token) {
+            alert('Please log in to reply to a comment.');
+            return;
+        }
         const replyText = prompt('Enter your reply:');
         if (replyText) {
             try {
-                await axios.post(`${url}api/v1/products/${productId}/comments/${commentId}/replies`, { text: replyText });
-                fetchComments(); // Refresh comments after replying
+                await axios.post(`${url}api/v1/comment/create`, { comment_id: commentId, comment: replyText }, {
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`,
+                    },
+                });
+                fetchComments();
             } catch (error) {
                 console.error('Error adding reply:', error);
             }
@@ -86,13 +88,12 @@ function CommentSection({ productId }) {
     };
 
     useEffect(() => {
-        fetchComments(); // Fetch comments when the component mounts
+        fetchComments();
     }, [productId]);
 
     return (
         <div>
             <h2 className="mb-4">Comments</h2>
-            {/* Display existing comments */}
             {comments.map(comment => (
                 <Comment
                     key={comment._id}
@@ -102,11 +103,14 @@ function CommentSection({ productId }) {
                     handleReply={handleReply}
                 />
             ))}
-            {/* Add new comment */}
-            <div className="mb-3">
-                <textarea className="form-control mb-2" value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a new comment" />
-                <button className="btn btn-primary" onClick={handleAddComment}>Add Comment</button>
-            </div>
+            {auth?.token ? (
+                <div className="mb-3">
+                    <textarea className="form-control mb-2" value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a new comment" />
+                    <button className="btn btn-primary" onClick={handleAddComment}>Add Comment</button>
+                </div>
+            ) : (
+                <p>Please log in to add a comment.</p>
+            )}
         </div>
     );
 }
