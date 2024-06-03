@@ -18,6 +18,7 @@ exports.requireSignIn = (req, res, next) => {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
       if (payload.role === "user")
         req.userId = payload.id;
+        req.user = payload.name;
       if (payload.role === "merchant")
         req.merchantId = payload.id;
       // console.log(req.userId)

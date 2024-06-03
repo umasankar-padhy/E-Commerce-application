@@ -115,6 +115,7 @@ exports.login = async (req, res) => {
             });
         }
         const payload = {
+            name: user.name,
             email: user.email,
             id: user._id,
             role:"user"

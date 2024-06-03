@@ -31,8 +31,8 @@ const commentSchema = new mongoose.Schema({
         ref: 'Comment',
         // required: true
     }],
-    like: { type: Boolean, required: true },
-    dislike: { type: Boolean, required: true }
+    // like: { type: Boolean, required: true },
+    // dislike: { type: Boolean, required: true }
     
 }, {
     timestamps: true

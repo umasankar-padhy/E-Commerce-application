@@ -25,6 +25,8 @@ export default function Cart() {
         <div>
             <Navbarr />
             <div className=" mt-4">
+                {/* <pre>{JSON.stringify(cart, null, 4)}</pre> */}
+
                 <h2>In Your Cart</h2>
                 <div>
                     {cart.length === 0 ? (
@@ -43,9 +45,12 @@ export default function Cart() {
                     )}
                 </div>
                 <div>
-                    Total Price: &#8377; {totalPrice.toFixed(2)}/-
+
                 </div>
-                <div>
+                <div className=" mt-4" >
+                    <h4> Total Price: &#8377; {totalPrice.toFixed(2)}/-</h4>
+                </div>
+                <div className=" mt-5 ms-3">
                     <button
                         className="btn btn-warning"
                         onClick={handleCheckOut}
