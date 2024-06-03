@@ -51,9 +51,15 @@ exports.createNotification = async (req, res) => {
 exports.getAllNotifications = async (req, res) => {
     try {
         const notifications = await Notification.find({merchant_id:req.merchantId,isseen:false})
-            // .populate('merchant_id')
-            // .populate('product_id')
-            // .populate('order_id');
+            .populate({
+                path: 'order_id',
+                populate: {
+                    path: 'user_id',
+                    model: 'User'
+                }
+            })
+            .populate('product_id')
+            .exec();
 
         res.status(200).json(notifications);
     } catch (error) {
