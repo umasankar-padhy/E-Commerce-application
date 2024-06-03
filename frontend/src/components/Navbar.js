@@ -3,7 +3,7 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Badge, Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAuth } from '../redux/auth/authActions';
 import { toast } from "react-toastify";
 
@@ -36,9 +36,9 @@ export default function Navbarr() {
                             </Nav.Link>
                         </Nav.Item>
 
-                        <Nav.Item>
+                        {/* <Nav.Item>
                             <Nav.Link to="/cart" as={NavLink}>
-                                {/* <pre>{JSON.stringify(cart, null, 4)}</pre> */}
+                                {/* <pre>{JSON.stringify(cart, null, 4)}</pre> 
 
 
                                 Cart{" "}
@@ -50,7 +50,7 @@ export default function Navbarr() {
 
 
                             </Nav.Link>
-                        </Nav.Item>
+                        </Nav.Item> */}
                         {Object.keys(auth).length === 0 ? (
                             <>
                                 <Nav.Item>
@@ -70,17 +70,33 @@ export default function Navbarr() {
                                 </Nav.Item>
                             </>
                         ) : (
+                            <>
+                                <Nav.Item>
+                                    <Nav.Link to="/cart" as={NavLink}>
+                                        {/* <pre>{JSON.stringify(cart, null, 4)}</pre> */}
 
-                            <Nav.Item>
-                                <Nav.Link as={NavLink} onClick={handleLogout} to="/login">
-                                    Logout
-                                </Nav.Link>
-                            </Nav.Item>
 
+                                        Cart{" "}
+                                        {cart.length ? (
+                                            <Badge bg="secondary">
+                                                {cart?.length}
+                                            </Badge>
+                                        ) : ""}
+
+
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link as={NavLink} onClick={handleLogout} to="/login">
+                                        Logout
+                                    </Nav.Link>
+                                </Nav.Item>
+
+                            </>
                         )}
 
-                 
-                        
+
+
                     </Nav>
                 </Navbar.Collapse>
             </div>

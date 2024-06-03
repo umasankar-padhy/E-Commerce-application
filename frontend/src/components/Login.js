@@ -66,7 +66,7 @@ export default function Login() {
             {/* <div style={{ backgroundColor: "#ffff00" }}> <h4 className="p-2 m-2">login Page</h4></div> */}
 
             {loading ? <Spinner /> :
-                <div className="d-flex  justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+                <div className="d-flex  justify-content-center align-items-center" style={{ minHeight: "90vh" }}>
 
                     <form className="col-3-lg col-6-md col-9-sm border border-5 border-light rounded rounded-3" onSubmit={handleSubmit}>
                         <div className="m-1 rounded rounded-2  " style={{ backgroundColor: "#e8e9eb" }}> <h4 className="p-2 m-2">login Page</h4></div>
@@ -112,7 +112,9 @@ export default function Login() {
                         </div>
                         <div className="p-1 m-2">
 
-                            <Link to="/register">Don't have an account?</Link>
+                            <Link to="/register">Don't have an account ?</Link> sign-up
+                            <br />
+                            <Link to="/forgot_password">forgot password ?</Link>
                         </div>
                     </form>
                 </div>
