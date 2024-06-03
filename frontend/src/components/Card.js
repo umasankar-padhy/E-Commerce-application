@@ -75,25 +75,18 @@ export default function Card({ item }) {
             console.error('Error:', err);
         }
     }
-<<<<<<< HEAD
 //  product card is created here
-    const isProductInCart = cart.some((cartItem) => cartItem.product_id?._id === item?._id);
-    const isOrdered = cart.some((cartItem) => cartItem.product_id?._id === item?._id && cartItem.isOrdered);
-=======
+    // const isProductInCart = cart.some((cartItem) => cartItem.product_id?._id === item?._id);
+    // const isOrdered = cart.some((cartItem) => cartItem.product_id?._id === item?._id && cartItem.isOrdered);
     const cartItem = cart.find(cartItem => cartItem?.product_id?._id === item?._id);
     const isProductInCart = Boolean(cartItem);
     const isOrdered = cartItem?.isOrdered;
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
     return (
         <div>
             <div className="card m-2" style={{ width: '16rem' }} key={item?._id}>
                 <img
-<<<<<<< HEAD
                     src={item?.imageUrl[0]}
-=======
-                    src={item.imageUrl[0]}
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
                     className="card-img-top"
                     alt={item?.title}
                     style={{ height: '12rem' }}

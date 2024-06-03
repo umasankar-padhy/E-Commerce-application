@@ -194,33 +194,6 @@ exports.getProduct = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
-// Get product by ID
-exports.getProductById = async (req, res) => {
-    try {
-        const productId = req.params.id;
-        const product = await Product.findById(productId).populate('merchant_id', 'name email');
-
-        if (!product) {
-            return res.status(404).json({
-                success: false,
-                message: "Product not found",
-            });
-        }
-
-        return res.status(200).json({
-            success: true,
-            data: product,
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Error retrieving product",
-        });
-    }
-};
-=======
 // // Get product by ID
 // exports.getProductById = async (req, res) => {
 //     try {
@@ -246,7 +219,6 @@ exports.getProductById = async (req, res) => {
 //         });
 //     }
 // };
->>>>>>> 5ff320061b2e267ea064bd7f9fc82c9b4a33eb18
 
 exports.getProductByMerchant = async (req, res) => {
     try {
@@ -342,7 +314,7 @@ exports.updateProduct = async (req, res) => {
                 // // Upload to Cloudinary
                 // const response = await uploadFileToCloudinary(file, "E_COMMERCE");
                 // imageUrls.push(response.secure_url);
-                
+
                 // Upload to Cloudinary
                 try {
                     const response = await uploadFileToCloudinary(file, "E_COMMERCE");
@@ -454,20 +426,6 @@ exports.deleteImage = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const populateCommentsRecursively = async (comment) => {
     if (!comment.comment_ids || comment.comment_ids.length === 0) {
         return comment;
@@ -494,9 +452,11 @@ const populateProductComments = async (productId) => {
             return null;
         }
 
-        // Recursively populate the comments
-        for (let i = 0; i < product.comment_ids.length; i++) {
-            product.comment_ids[i] = await populateCommentsRecursively(product.comment_ids[i]);
+        // Recursively populate the comments if comment_ids exist
+        if (product.comment_ids && product.comment_ids.length > 0) {
+            for (let i = 0; i < product.comment_ids.length; i++) {
+                product.comment_ids[i] = await populateCommentsRecursively(product.comment_ids[i]);
+            }
         }
 
         return product;
@@ -504,49 +464,11 @@ const populateProductComments = async (productId) => {
         throw new Error("Error populating product comments: " + error.message);
     }
 };
-
-
-
 exports.getProductById = async (req, res) => {
     try {
         const productId = req.params.id;
         const product = await populateProductComments(productId);
 
-        // const product = await Product.findById(productId).populate({
-        //     path: 'comment_ids',
-        //     populate: {
-        //         path: 'comment_ids',
-        //         model: 'Comment',
-        //         populate: {
-        //             path: 'comment_ids',
-        //             model: 'Comment',
-        //             populate: {
-        //                 path: 'comment_ids',
-        //                 model: 'Comment',
-        //                 populate: {
-        //                     path: 'comment_ids',
-        //                     model: 'Comment',
-        //                     populate: {
-        //                         path: 'comment_ids',
-        //                         model: 'Comment',
-        //                         populate: {
-        //                             path: 'comment_ids',
-        //                             model: 'Comment',
-        //                             populate: {
-        //                                 path: 'comment_ids',
-        //                                 model: 'Comment',
-        //                                 populate: {
-        //                                     path: 'comment_ids',
-        //                                     model: 'Comment'
-        //                                 }
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }).lean();
         if (!product) {
             return res.status(404).json({
                 success: false,
@@ -566,10 +488,3 @@ exports.getProductById = async (req, res) => {
         });
     }
 };
-
-
-
-
-
-
-
