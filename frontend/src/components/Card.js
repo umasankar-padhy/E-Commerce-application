@@ -75,6 +75,7 @@ export default function Card({ item, auth, navigate }) {
         }
     }
 
+
     const isProductInCart = cart.some((cartItem) => cartItem.product_id?._id === item?._id);
     const isOrdered = cart.some((cartItem) => cartItem.product_id?._id === item?._id && cartItem.isOrdered);
     const hasMultipleImages = Array.isArray(item?.imageUrl) && item?.imageUrl.length > 1;
@@ -109,6 +110,32 @@ export default function Card({ item, auth, navigate }) {
                     <h6 className="card-quantity">
                         Qty:
                         <select className="ms-2 h-100 bg-light rounded" onChange={(e) => setQty(Number(e.target.value))}>
+
+//  product card is created here
+    // const isProductInCart = cart.some((cartItem) => cartItem.product_id?._id === item?._id);
+    // const isOrdered = cart.some((cartItem) => cartItem.product_id?._id === item?._id && cartItem.isOrdered);
+    const cartItem = cart.find(cartItem => cartItem?.product_id?._id === item?._id);
+    const isProductInCart = Boolean(cartItem);
+    const isOrdered = cartItem?.isOrdered;
+
+    return (
+        <div>
+            <div className="card m-2" style={{ width: '16rem' }} key={item?._id}>
+                <img
+                    src={item?.imageUrl[0]}
+                    className="card-img-top"
+                    alt={item?.title}
+                    style={{ height: '12rem' }}
+                />
+
+                <div className="card-body" style={{ height: '11.5rem' }}>
+                    <h6 className="card-title">{item?.title?.length > 64 ? `${item.title.substring(0, 64)}...` : item?.title}</h6>
+
+                    <h5 className="card-title">&#8377; {item?.price}/-</h5>
+                    <h6 className="card-title">
+                        set Quantity :
+                        <select className="ms-2 h-100 bg-light rounded" onChange={(e) => setQty(e.target.value)}>
+
                             {Array.from(Array(10), (e, i) => (
                                 <option key={i + 1} value={i + 1}>
                                     {i + 1}

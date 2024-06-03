@@ -17,6 +17,12 @@ import Profile from "./components/merchant/Profile";
 import ForgotPassword from "./components/merchant/ForgotPassword";
 import ResetPassword from "./components/merchant/ResetPassword";
 import CommentPage from "./components/CommentsPage"; // Import the CommentPage component
+   
+import NotificationPage from "./components/merchant/NotificationPage";
+import Orderpage from "./components/Orderpage";
+import ResetPasswordUser from "./components/ResetPassword";
+import ForgotPasswordUser from "./components/ForgotPassword";
+
 
 function App() {
   return (
@@ -30,8 +36,11 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/reset_password" element={<ResetPasswordUser />}></Route>
+        <Route path="/forgot_password" element={<ForgotPasswordUser />}></Route>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/cart" element={<PrivateRoute element={Cart} />} />
+        <Route path="/order" element={<PrivateRoute element={Orderpage} />} />
         <Route path="/merchant/signup" element={<MerchantSignupPage />} />
         <Route path="/merchant/login" element={<MerchantLogin />} />
         <Route path="/merchant/forgot-password" element={<ForgotPassword />} />

@@ -1,0 +1,11 @@
+.custom-dashboard-button {
+    margin-left: 10px;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    font-weight: bold;
+}
+
+.custom-dashboard-button:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}

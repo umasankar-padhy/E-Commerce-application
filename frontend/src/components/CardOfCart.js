@@ -38,13 +38,14 @@ export default function CardOfCart({ item }) {
             <div className="row g-0">
                 <div className="col-md-4">
                     <img
-                        src={item.product_id?.imageUrl}
+                        src={item.product_id?.imageUrl[0]}
                         className="img-fluid rounded-start"
                         alt={item.product_id?.name}
+                        style={{ width: '150px' }}
                     />
                 </div>
                 <div className="col-md-8">
-                    <div className="card-body">
+                    <div className="card-body" style={{ width: '300px' }}>
                         <h5 className="card-title">{item.product_id?.title}</h5>
                         <p className="card-text">Price: &#8377; {item.product_id?.price || 'N/A'}/-</p>
                         <p className="card-text">Quantity: {item.quantity || 'N/A'}</p>

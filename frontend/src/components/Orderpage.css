@@ -1,0 +1,31 @@
+/* Orderpage.css */
+
+.cart-item-card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+}
+
+.cart-item-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.my-4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-section {
+    border: 1px solid #ddd;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}

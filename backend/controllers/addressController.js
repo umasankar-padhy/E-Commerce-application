@@ -88,6 +88,54 @@ exports.getAddressById = async (req, res) => {
     }
 };
 
+// Get address by ID
+exports.getAddressByAuthId = async (req, res) => {
+    try {
+        if(req.userId){
+            const address = await Address.find({ user_id: req.userId })
+                .populate('user_id', 'name email')
+                
+
+            if (!address) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Address not found",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: address,
+            });
+        }
+        if (req.merchantId) {
+            const address = await Address.find({ merchant_id: req.merchantId })
+               
+                .populate('merchant_id', 'name email');
+
+            if (!address) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Address not found",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: address,
+            });
+        }
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error retrieving address",
+        });
+    }
+};
+
+
  //controller for update address
 exports.updateAddress = async (req, res) => {
     try {

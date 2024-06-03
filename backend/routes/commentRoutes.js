@@ -6,7 +6,7 @@ const { requireSignIn } = require("../middleware/authMiddleware");
 
 router.post("/create", requireSignIn, createComment);
 router.put("/update/:id", requireSignIn, updateComment);
-router.post("/get/:id", requireSignIn, getComment);
+router.put("/get/:id", requireSignIn, getComment);
 router.get("/count/:id", requireSignIn, getCommentCount);
 router.delete("/delete/:id", requireSignIn, deleteComment);
 
