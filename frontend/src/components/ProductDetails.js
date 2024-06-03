@@ -660,7 +660,7 @@ export default function ProductDetails() {
                     <div className="row container mt-2">
                         <div className="col-md-6">
                             <img
-                                src={product?.imageUrl}
+                                src={product?.imageUrl[0]}
                                 className="card-img-top"
                                 alt={product.title}
                                 style={{ height: "400px", width: "300px" }}

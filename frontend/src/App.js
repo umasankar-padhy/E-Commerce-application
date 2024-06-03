@@ -16,7 +16,6 @@ import MerchantDashboard from "./components/merchant/MerchantDashboard";
 import Profile from "./components/merchant/Profile";
 import ForgotPassword from "./components/merchant/ForgotPassword";
 import ResetPassword from "./components/merchant/ResetPassword";
-import CommentPage from "./components/CommentsPage"; // Import the CommentPage component
 import NotificationPage from "./components/merchant/NotificationPage";
 import Orderpage from "./components/Orderpage";
 import ResetPasswordUser from "./components/ResetPassword";
@@ -45,8 +44,7 @@ function App() {
         <Route path="/merchant/reset-password" element={<ResetPassword />} />
         <Route path="/merchant/dashboard/*" element={<MerchantDashboard />} />
         <Route path="/merchant/dashboard/profile" element={<Profile />} />
-        {/* Include the comment page route */}
-        <Route path="/product/:id/comments" element={<CommentPage />} />
+        
       </Routes>
       <ToastContainer />
     </div>
