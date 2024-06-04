@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Container, Alert } from "react-bootstrap";
-import ProductForm from "./ProductForm";
+import { Container, Alert, Button, Card, Carousel } from "react-bootstrap";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
+
+import { Link, Routes, Route } from "react-router-dom"; // Import Routes and Route
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { url } from "../../default";
+import ProductEdit from "./ProductEdit";
+import ProductView from "./ProductView";
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
   const [auth, setAuth] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,10 @@ const ProductManagement = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       };
-      const response = await axios.get(`${url}api/v1/product`, config);
+      const response = await axios.get(
+        `${url}api/v1/product/getProduct`,
+        config
+      );
       if (response.data && response.data.success) {
         setProducts(response.data.data);
       } else {
@@ -50,32 +55,27 @@ const ProductManagement = () => {
     }
   }, [auth]);
 
-  const addProduct = async (product) => {
+  const deleteProduct = async (id) => {
     try {
       const config = {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
       };
-      const response = await axios.post(
-        `${url}api/v1/product/create`,
-        product,
+      const response = await axios.delete(
+        `${url}api/v1/product/delete/${id}`,
         config
       );
       if (response.data && response.data.success) {
-        setProducts([...products, response.data.data]);
+        setProducts(products.filter((product) => product._id !== id));
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 3000);
       } else {
-        throw new Error("Failed to add product");
+        throw new Error("Failed to delete product");
       }
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error deleting product:", error);
     }
-  };
-
-  const addToCart = (product) => {
-    setCart([...cart, product]);
   };
 
   return (
@@ -90,34 +90,74 @@ const ProductManagement = () => {
           onClose={() => setShowAlert(false)}
           dismissible
         >
-          Product added successfully!
+          Product deleted successfully!
         </Alert>
       )}
 
-      <ProductForm addProduct={addProduct} />
-
       <h2>Product List</h2>
-      <ul>
-        {products.map((product, index) => (
-          <li key={index}>
-            <h3>{product.title}</h3>
-            <p>Price: ${product.price}</p>
-            <p>{product.description}</p>
-            <button onClick={() => addToCart(product)}>Add to Cart</button>
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="row">
+          {products.map((product) => (
+            <div key={product._id} className="col-md-4 mb-4">
+              <Card>
+                {/* <Card.Img variant="top" src={product.imageUrl[0]} /> */}
+                <Carousel
+                  prevIcon={
+                    <FaArrowAltCircleLeft
+                      style={{ fontSize: "2rem", color: "#000" }}
+                    />
+                  }
+                  nextIcon={
+                    <FaArrowAltCircleRight
+                      style={{ fontSize: "2rem", color: "#000" }}
+                    />
+                  }
+                >
+                  {product.imageUrl.map((image, index) => (
+                    <Carousel.Item key={index}>
+                      <img
+                        className="d-block w-100 product-image"
+                        src={image}
+                        alt={product.title}
+                      />
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+                <Card.Body>
+                  <Card.Title>{product.title}</Card.Title>
+                  <Card.Text>Description: {product.description}</Card.Text>
+                  <Card.Text>Price: ${product.price}</Card.Text>
+                  <Link to={`/merchant/dashboard/products/view/${product._id}`}>
+                    View
+                  </Link>{" "}
+                  |{" "}
+                  <Link to={`/merchant/dashboard/products/edit/${product._id}`}>
+                    Edit
+                  </Link>{" "}
+                  |{" "}
+                  <Button variant="danger" onClick={() => deleteProduct(product._id)}>
+                    Delete
+                  </Button>
+                </Card.Body>
+              </Card>
+            </div>
+          ))}
+        </div>
+      )}
 
-      <h2>Cart</h2>
-      <ul>
-        {cart.map((item, index) => (
-          <li key={index}>
-            <h3>{item.title}</h3>
-            <p>Price: ${item.price}</p>
-            <p>{item.description}</p>
-          </li>
-        ))}
-      </ul>
+      {/* Add Route for ProductEdit and ProductView components */}
+      <Routes>
+        <Route
+          path="products/edit/:id"
+          element={<ProductEdit />}
+        />
+        <Route
+          path="products/view/:id"
+          element={<ProductView />}
+        />
+      </Routes>
     </Container>
   );
 };

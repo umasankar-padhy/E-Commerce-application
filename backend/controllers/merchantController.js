@@ -5,16 +5,16 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 var transport = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: "d81ff9a54f3fd8",
-      pass: "79f954ae6442c1"
-    }
-  });
-  const generateOtp = () => {
-    return Math.floor(1000 + Math.random() * 9000);
-    };
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "d81ff9a54f3fd8",
+    pass: "79f954ae6442c1"
+  }
+});
+const generateOtp = () => {
+  return Math.floor(1000 + Math.random() * 9000);
+};
 
 // Create a new merchant
 exports.MerchantSignUp = async (req, res) => {
@@ -22,7 +22,7 @@ exports.MerchantSignUp = async (req, res) => {
     const { name, phoneNo, alternatePhoneNo, email, password } = req.body;
 
     if (!name || !phoneNo || !email || !password) {
-      return res.status(400).json({
+      return res.status(202).json({
         success: false,
         message: "Please provide all required details",
       });
@@ -30,7 +30,7 @@ exports.MerchantSignUp = async (req, res) => {
 
     const existingMerchant = await Merchant.findOne({ email });
     if (existingMerchant) {
-      return res.status(400).json({
+      return res.status(202).json({
         success: false,
         message: "Merchant already exists",
       });
@@ -68,77 +68,77 @@ exports.MerchantSignUp = async (req, res) => {
 
 // Reset password for merchant
 exports.resetPassword = async (req, res) => {
-    try {
-        const { email, otp, password, confirmPassword } = req.body;
+  try {
+    const { email, otp, password, confirmPassword } = req.body;
 
-        // Check if all required fields are provided
-        if (!email || !otp || !password || !confirmPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide all required details",
-            });
-        }
-
-        // Find the merchant by email
-        const merchant = await Merchant.findOne({ email });
-
-        // Check if the merchant exists
-        if (!merchant) {
-            return res.status(404).json({
-                success: false,
-                message: "Merchant not found",
-            });
-        }
-
-        // Check if the OTP matches
-        if (merchant.otp !== otp) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid OTP",
-            });
-        }
- 
-        // Check if the OTP has expired
-        if (Date.now() > merchant.otpExpires) {
-            return res.status(400).json({
-                success: false,
-                message: "OTP has expired",
-            });
-        }
-
-        // Check if the new password matches the confirmation password
-        if (password !== confirmPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "Passwords do not match",
-            });
-        }
-
-        // Hash the new password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Update the merchant's password
-        merchant.password = hashedPassword;
-
-        // Clear the OTP and OTP expiration time
-        merchant.otp = undefined;
-        merchant.otpExpires = undefined;
-
-        // Save the updated merchant
-        await merchant.save();
-
-        // Return success response
-        return res.status(200).json({
-            success: true,
-            message: "Password reset successfully",
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Error resetting password",
-        });
+    // Check if all required fields are provided
+    if (!email || !otp || !password || !confirmPassword) {
+      return res.status(202).json({
+        success: false,
+        message: "Please provide all required details",
+      });
     }
+
+    // Find the merchant by email
+    const merchant = await Merchant.findOne({ email });
+
+    // Check if the merchant exists
+    if (!merchant) {
+      return res.status(202).json({
+        success: false,
+        message: "Merchant not found",
+      });
+    }
+
+    // Check if the OTP matches
+    if (merchant.otp !== otp) {
+      return res.status(202).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    // Check if the OTP has expired
+    if (Date.now() > merchant.otpExpires) {
+      return res.status(202).json({
+        success: false,
+        message: "OTP has expired",
+      });
+    }
+
+    // Check if the new password matches the confirmation password
+    if (password !== confirmPassword) {
+      return res.status(202).json({
+        success: false,
+        message: "Passwords do not match",
+      });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update the merchant's password
+    merchant.password = hashedPassword;
+
+    // Clear the OTP and OTP expiration time
+    merchant.otp = undefined;
+    merchant.otpExpires = undefined;
+
+    // Save the updated merchant
+    await merchant.save();
+
+    // Return success response
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error resetting password",
+    });
+  }
 };
 
 
@@ -213,7 +213,7 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
     const merchant = await Merchant.findOne({ email });
     if (!merchant) {
-      return res.status(404).json({
+      return res.status(202).json({
         success: false,
         message: "Merchant not found",
       });
@@ -268,7 +268,7 @@ exports.getMerchantProfile = async (req, res) => {
     const merchant = await Merchant.findById(merchantId);
     // .populate('product_id').populate('address_id')
     if (!merchant) {
-      return res.status(404).json({
+      return res.status(202).json({
         success: false,
         message: "Merchant not found",
       });
@@ -295,7 +295,7 @@ exports.updateMerchantProfile = async (req, res) => {
     const { name, phoneNo, alternatePhoneNo } = req.body;
 
     if (!name || !phoneNo) {
-      return res.status(400).json({
+      return res.status(202).json({
         success: false,
         message: "Please provide name and phone number",
       });
@@ -308,7 +308,7 @@ exports.updateMerchantProfile = async (req, res) => {
     });
 
     if (!merchant) {
-      return res.status(404).json({
+      return res.status(202).json({
         success: false,
         message: "Merchant not found",
       });
@@ -335,7 +335,7 @@ exports.updateMerchantProfile = async (req, res) => {
 //         const merchant = await Merchant.findByIdAndDelete(merchantId);
 
 //         if (!merchant) {
-//             return res.status(404).json({
+//             return res.status(202).json({
 //                 success: false,
 //                 message: "Merchant not found",
 //             });

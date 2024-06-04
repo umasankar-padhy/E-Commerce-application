@@ -1,19 +1,13 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Card,
-  Container,
-  Row,
-  Col,
-  Button,
-  Alert,
-} from "react-bootstrap";
+import { Form, Card, Container, Row, Col, Button, Image } from "react-bootstrap";
 import axios from "axios";
-import { useSelector } from "react-redux"; // Import useSelector hook
 import { url } from "../../default";
 import "./ProductForm.css"; // Import the custom CSS file
+import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ProductForm = ({ addProduct }) => {
+const ProductForm = () => {
   const [productData, setProductData] = useState({
     title: "",
     description: "",
@@ -29,7 +23,6 @@ const ProductForm = ({ addProduct }) => {
   });
 
   const [selectedImages, setSelectedImages] = useState([]);
-  const [showAlert, setShowAlert] = useState(false);
   const auth = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
@@ -56,20 +49,15 @@ const ProductForm = ({ addProduct }) => {
         formData.append(key, productData[key]);
       });
 
-      const response = await axios.post(
-        `${url}api/v1/product/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${url}api/v1/product/create`, formData, {
+        headers: {
+          Authorization: `Bearer ${auth?.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data && response.data.success) {
-        addProduct(response.data.data);
-        setShowAlert(true); // Show success alert
+        toast.success("Product added successfully!");
         setProductData({
           title: "",
           description: "",
@@ -84,24 +72,20 @@ const ProductForm = ({ addProduct }) => {
           rating: 0,
         });
         setSelectedImages([]);
-        setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
       } else {
-        throw new Error("Failed to add product");
+        throw new Error(response.data.message || "Failed to add product");
       }
     } catch (error) {
       console.error("Error adding product:", error);
+      toast.error(error.message || "Error adding product!");
     }
   };
 
   return (
     <Container className="mt-5">
+      <ToastContainer />
       <Row className="justify-content-md-center">
         <Col md={8}>
-          {showAlert && (
-            <Alert variant="success" className="custom-alert">
-              Product added successfully!
-            </Alert>
-          )}
           <Card className="product-form-card">
             <Card.Header className="bg-primary text-white text-center">
               Add New Product
@@ -124,8 +108,7 @@ const ProductForm = ({ addProduct }) => {
                 <Form.Group controlId="description" className="mb-3">
                   <Form.Label>Description</Form.Label>
                   <Form.Control
-                    as="textarea"
-                    rows={3}
+                    type="text"
                     placeholder="Enter description"
                     name="description"
                     value={productData.description}
@@ -144,6 +127,17 @@ const ProductForm = ({ addProduct }) => {
                     onChange={handleImageChange}
                     className="custom-input"
                   />
+                  <div className="mt-2">
+                    {selectedImages.map((image, index) => (
+                      <div key={index} className="image-preview">
+                        <Image
+                          src={URL.createObjectURL(image)}
+                          thumbnail
+                          className="mr-2"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </Form.Group>
 
                 <Row>

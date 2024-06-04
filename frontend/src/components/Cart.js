@@ -5,6 +5,7 @@ import Navbarr from './Navbar';
 import axios from 'axios';
 import { url } from '../default';
 import { useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 
 export default function Cart() {
     const cart = useSelector((state) => state.cart);
@@ -13,54 +14,51 @@ export default function Cart() {
     const navigate = useNavigate();
 
     const totalPrice = cart
-    .filter(item => item.product_id && !item.isOrdered)
-    .reduce((total, item) => total + (item.product_id.price * item.quantity), 0);
+        .filter(item => item.product_id && !item.isOrdered)
+        .reduce((total, item) => total + (item.product_id.price * item.quantity), 0);
 
-    const handleCheckOut =  (e) => {
+    const handleCheckOut = (e) => {
         e.preventDefault();
-        navigate("/order")
+        navigate("/order");
     };
 
     return (
         <div>
             <Navbarr />
-            <div className=" mt-4">
+            <Container className="mt-4">
                 {/* <pre>{JSON.stringify(cart, null, 4)}</pre> */}
 
-                <h2>In Your Cart</h2>
-                <div>
-                    {cart.length === 0 ? (
-                        <div className="alert alert-info" role="alert" 
-                        onClick={()=>{navigate("/home")}}
+                <h2 className="mb-4">In Your Cart</h2>
+                {cart.length === 0 ? (
+                    <Alert variant="info" onClick={() => navigate("/home")} className="text-center">
+                        Your cart is empty. Click here to continue Shopping
+                    </Alert>
+                ) : (
+                    <Row>
+                        {cart.map((item) => (
+                            <Col key={item._id} sm={12} md={6} lg={4} className="mb-3">
+                                <CardOfCart item={item} />
+                            </Col>
+                        ))}
+                    </Row>
+                )}
+                {cart.length > 0 && (
+                    <div className="mt-4">
+                        <h4 className="text-end">Total Price: &#8377; {totalPrice.toFixed(2)}/-</h4>
+                    </div>
+                )}
+                {cart.length > 0 && (
+                    <div className="text-end mt-3">
+                        <Button
+                            variant="warning"
+                            onClick={handleCheckOut}
+                            disabled={loading}
                         >
-                            Your cart is empty Click here to continue Shopping
-                            
-                        </div>
-                    ) : (
-                        <div className="container d-flex flex-wrap">
-                            {cart?.map((item) => (
-                                <CardOfCart key={item._id} item={item} />
-                            ))}
-                        </div>
-                    )}
-                </div>
-                <div>
-
-                </div>
-                <div className=" mt-4" >
-                    <h4> Total Price: &#8377; {totalPrice.toFixed(2)}/-</h4>
-                </div>
-                <div className=" mt-5 ms-3">
-                    <button
-                        className="btn btn-warning"
-                        onClick={handleCheckOut}
-                        disabled={loading}
-                        
-                    >
-                        {loading ? 'Processing...' : 'Proceed to buy'}
-                    </button>
-                </div>
-            </div>
+                            {loading ? 'Processing...' : 'Proceed to buy'}
+                        </Button>
+                    </div>
+                )}
+            </Container>
         </div>
     );
 }

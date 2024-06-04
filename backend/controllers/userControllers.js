@@ -23,7 +23,7 @@ exports.signup = async (req, res) => {
     try {
 
         const { email, name, password, phoneNo } = req.body;
-        if (!email || !name || !password ||  !phoneNo) {
+        if (!email || !name || !password || !phoneNo) {
             return res.status(200).json({
                 success: false,
                 message: "Please fill in all the details carefully",
@@ -118,7 +118,7 @@ exports.login = async (req, res) => {
             name: user.name,
             email: user.email,
             id: user._id,
-            role:"user"
+            role: "user"
         };
         if (await bcrypt.compare(password, user.password)) {
             let token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -146,6 +146,7 @@ exports.login = async (req, res) => {
                 success: true,
                 token: token,
                 email: user.email,
+                role: "user",
                 message: "User logged in successfully",
             });
         } else {
@@ -173,7 +174,7 @@ exports.getProfile = async (req, res) => {
         const user = await User.findById(id);
 
         if (!user) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "User not found",
             });
@@ -199,23 +200,23 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
     try {
         const id = req.userId;
-        const { name, phoneNo,alternatePhoneNo } = req.body;
+        const { name, phoneNo, alternatePhoneNo } = req.body;
 
-        if (!name || !phoneNo ) {
-            return res.status(400).json({
+        if (!name || !phoneNo) {
+            return res.status(202).json({
                 success: false,
                 message: "Please provide name and phone number",
             });
         }
 
         const user = await User.findOneAndUpdate(
-            { _id:id },
-            { name, phoneNo , alternatePhoneNo},
+            { _id: id },
+            { name, phoneNo, alternatePhoneNo },
             { new: true }
         );
 
         if (!user) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "User not found",
             });
@@ -247,7 +248,7 @@ exports.resetPassword = async (req, res) => {
 
         // Check if all required fields are provided
         if (!email || !otp || !password || !confirmPassword) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Please provide all required details",
             });
@@ -258,7 +259,7 @@ exports.resetPassword = async (req, res) => {
 
         // Check if the user exists
         if (!user) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "user not found",
             });
@@ -266,7 +267,7 @@ exports.resetPassword = async (req, res) => {
 
         // Check if the OTP matches
         if (user.otp !== otp) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Invalid OTP",
             });
@@ -274,7 +275,7 @@ exports.resetPassword = async (req, res) => {
 
         // Check if the OTP has expired
         if (Date.now() > user.otpExpires) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "OTP has expired",
             });
@@ -282,7 +283,7 @@ exports.resetPassword = async (req, res) => {
 
         // Check if the new password matches the confirmation password
         if (password !== confirmPassword) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Passwords do not match",
             });
@@ -320,7 +321,7 @@ exports.forgotPassword = async (req, res) => {
         const { email } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "user not found",
             });

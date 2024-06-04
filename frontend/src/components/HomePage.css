@@ -1,0 +1,17 @@
+.custom-spinner {
+  color: #007bff;
+  /* Customize spinner color */
+}
+
+.container {
+  max-width: 1200px;
+}
+
+h2 {
+  font-weight: bold;
+  color: #333;
+}
+
+.row {
+  margin-top: 20px;
+}

@@ -5,7 +5,7 @@ const Notification = require('../models/Notification');
 exports.createNotification = async (req, res) => {
     try {
         // Extracting data from the request body
-        const{ products} = req.body;
+        const { products } = req.body;
 
         // Array to store created notifications
         const notifications = [];
@@ -16,11 +16,11 @@ exports.createNotification = async (req, res) => {
 
             // Create a new notification instance
             const notification = new Notification({
-                user_id:req.userId,
+                user_id: req.userId,
                 product_id: productId,
                 merchant_id: merchantId,
-                order_id:req.orderId,
-            
+                order_id: req.orderId,
+
                 // Assuming other fields like order_id and isseen are not provided in the request
                 // If needed, adjust this code to include those fields
             });
@@ -50,7 +50,7 @@ exports.createNotification = async (req, res) => {
 // Get all notifications
 exports.getAllNotifications = async (req, res) => {
     try {
-        const notifications = await Notification.find({merchant_id:req.merchantId,isseen:false})
+        const notifications = await Notification.find({ merchant_id: req.merchantId, isseen: false })
             .populate({
                 path: 'order_id',
                 populate: {
@@ -72,7 +72,7 @@ exports.changeAllNotifications = async (req, res) => {
     const { ids } = req.body
     try {
         const notifications = await Notification.updateMany({ _id: { $in: ids } }, { $set: { isseen: true } });
-   // .populate('merchant_id')
+        // .populate('merchant_id')
         // .populate('product_id')
         // .populate('order_id');
 

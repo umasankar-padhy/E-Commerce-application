@@ -13,7 +13,7 @@ export default function Navbarr() {
     const cart = useSelector((state) => state.cart);
     // const inCartItems = cart.filter(item => item.isAdded);
 
-    console.log(auth)
+    // console.log(auth)
     const handleLogout = () => {
         localStorage.removeItem("auth");
         dispatch(setAuth([]));

@@ -7,7 +7,7 @@ exports.requireSignIn = (req, res, next) => {
 
 
     if (!token || token === undefined) {
-      return res.status(401).json({
+      return res.status(202).json({
         success: false,
         Message: "Token missing",
       });
@@ -18,14 +18,14 @@ exports.requireSignIn = (req, res, next) => {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
       if (payload.role === "user")
         req.userId = payload.id;
-        req.user = payload.name;
+      req.user = payload.name;
       if (payload.role === "merchant")
         req.merchantId = payload.id;
       // console.log(req.userId)
       // console.log(req.merchantId)
     } catch (error) {
 
-      return res.status(401).json({
+      return res.status(202).json({
         success: false,
         Message: "Token is invalid",
       });
@@ -36,7 +36,7 @@ exports.requireSignIn = (req, res, next) => {
     next();
   } catch (error) {
 
-    return res.status(401).json({
+    return res.status(202).json({
       success: false,
       Message: "Something went wrong while verifying the token",
       error: error.message,

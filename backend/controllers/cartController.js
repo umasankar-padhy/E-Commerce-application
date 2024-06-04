@@ -11,7 +11,7 @@ exports.addToCart = async (req, res) => {
 
         // Validate required fields
         if (!product_id || !quantity) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: 'Product ID and quantity are required'
             });
@@ -34,14 +34,14 @@ exports.addToCart = async (req, res) => {
         //     cart.color = color || cart.color;
         // } else {
         //     // Create a new cart item
-          const  cart = new Cart({
-                user_id: userId,
-                product_id,
-                quantity,
-                size,
-                color,
-                // orderDate: new Date()
-            });
+        const cart = new Cart({
+            user_id: userId,
+            product_id,
+            quantity,
+            size,
+            color,
+            // orderDate: new Date()
+        });
         // }
 
         // Save the cart item
@@ -50,8 +50,8 @@ exports.addToCart = async (req, res) => {
         // Update the user's cart IDs array
         const user = await User.findById(userId);
         // if (!user.cart_id.includes(savedCart._id)) {
-            user.cart_id.push(savedCart._id);
-            await user.save();
+        user.cart_id.push(savedCart._id);
+        await user.save();
         // }
         const getCart = await Cart.find({ user_id: userId, isOrdered: false }).populate('product_id');
 
@@ -74,9 +74,9 @@ exports.addToCart = async (req, res) => {
 exports.getCart = async (req, res) => {
     try {
         const userId = req.userId;
-        const cart = await Cart.find({ user_id: userId ,isOrdered:false}).populate('product_id');
+        const cart = await Cart.find({ user_id: userId, isOrdered: false }).populate('product_id');
 
-        if (!cart ) {
+        if (!cart) {
             return res.status(204).json({
                 success: false,
                 message: 'Cart not found'
@@ -105,7 +105,7 @@ exports.updateCartItem = async (req, res) => {
 
         // Validate required fields
         if (!product_id || quantity === undefined) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: 'Product ID and quantity are required'
             });
@@ -120,7 +120,7 @@ exports.updateCartItem = async (req, res) => {
             });
         }
 
-        let cart = await Cart.findOne({ user_id: userId, product_id ,isOrdered:false});
+        let cart = await Cart.findOne({ user_id: userId, product_id, isOrdered: false });
         if (!cart) {
             return res.status(204).json({
                 success: false,
@@ -131,7 +131,7 @@ exports.updateCartItem = async (req, res) => {
         cart.quantity += parseInt(quantity);
         cart.size = size || cart.size;
         cart.color = color || cart.color;
-        cart.isAdded =true ; 
+        cart.isAdded = true;
         const updatedCart = await cart.save();
         const getCart = await Cart.find({ user_id: userId, isOrdered: false }).populate('product_id');
 
@@ -156,15 +156,15 @@ exports.removeFromCart = async (req, res) => {
         const { product_id } = req.body;
 
         if (!product_id) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: 'Product ID is required'
             });
         }
         // isAdded: false
         // const cart = await Cart.findOneAndUpdate({ user_id: userId, product_id: product_id ,isOrdered:false},{isAdded: !isAdded});
-     //  // // const cart = await Cart.findOne({ user_id: userId, product_id: product_id ,isOrdered:false});
-        const cart = await Cart.findOneAndDelete({ user_id: userId, product_id: product_id ,isOrdered:false});
+        //  // // const cart = await Cart.findOne({ user_id: userId, product_id: product_id ,isOrdered:false});
+        const cart = await Cart.findOneAndDelete({ user_id: userId, product_id: product_id, isOrdered: false });
 
         if (!cart) {
             return res.status(204).json({
@@ -172,8 +172,8 @@ exports.removeFromCart = async (req, res) => {
                 message: 'Cart item not found'
             });
         }
-     //  // // cart.isAdded=!cart.isAdded;
-     //  // // await cart.save();
+        //  // // cart.isAdded=!cart.isAdded;
+        //  // // await cart.save();
         const user = await User.findById(userId);
         // if (!user.cart_id.includes(savedCart._id)) {
         user.cart_id.pull(cart._id);
@@ -182,7 +182,7 @@ exports.removeFromCart = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data:getCart,
+            data: getCart,
             message: 'Product removed from cart successfully'
         });
     } catch (error) {

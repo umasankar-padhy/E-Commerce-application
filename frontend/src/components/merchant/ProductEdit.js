@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Image } from "react-bootstrap";
 import { url } from "../../default";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,7 +12,7 @@ const ProductEdit = () => {
     const [productData, setProductData] = useState({
         title: "",
         description: "",
-        imageUrl: "",
+        imageUrl: [],
         price: "",
         quantity: "",
         size: "",
@@ -25,13 +25,11 @@ const ProductEdit = () => {
     });
     const navigate = useNavigate();
     const auth = useSelector((state) => state.auth);
-
+    const [showUpdate, setShowUpdate] = useState(false);
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(
-                    `${url}api/v1/product/getProduct/${id}`
-                );
+                const response = await axios.get(`${url}api/v1/product/get/${id}`);
                 if (response.data && response.data.success) {
                     setProductData(response.data.data);
                 } else {
@@ -53,17 +51,48 @@ const ProductEdit = () => {
         });
     };
 
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        setProductData({
+            ...productData,
+            imageUrl: [...productData.imageUrl, ...files],
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setShowUpdate(true);
+        const formData = new FormData();
+        formData.append("title", productData.title);
+        formData.append("description", productData.description);
+        formData.append("price", productData.price);
+        formData.append("quantity", productData.quantity);
+        formData.append("size", productData.size);
+        formData.append("color", productData.color);
+        formData.append("MFG_Date", productData.MFG_Date);
+        formData.append("EXP_Date", productData.EXP_Date);
+        formData.append("brand", productData.brand);
+        formData.append("category", productData.category);
+        formData.append("rating", productData.rating);
+        productData.imageUrl.forEach((file, index) => {
+            formData.append("images", file);
+        });
+
+        // Log FormData for debugging
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
+
         try {
             const config = {
                 headers: {
                     Authorization: `Bearer ${auth.token}`,
+                    "Content-Type": "multipart/form-data",
                 },
             };
             const response = await axios.put(
                 `${url}api/v1/product/update/${id}`,
-                productData,
+                formData,
                 config
             );
             if (response.data && response.data.success) {
@@ -78,6 +107,7 @@ const ProductEdit = () => {
             console.error("Error updating product:", error);
             toast.error("Error updating product!");
         }
+        setShowUpdate(false);
     };
 
     return (
@@ -112,13 +142,29 @@ const ProductEdit = () => {
                 <Form.Group controlId="imageUrl" className="mb-3">
                     <Form.Label>Image URL</Form.Label>
                     <Form.Control
-                        type="text"
-                        placeholder="Enter image URL"
-                        name="imageUrl"
-                        value={productData.imageUrl}
-                        onChange={handleChange}
-                        required
+                        type="file"
+                        multiple
+                        onChange={handleImageChange}
                     />
+                    {/* <div className="mt-2">
+                        {productData.imageUrl.map((image, index) => (
+                            <div key={index} className="image-preview">
+                                {typeof image === "string" ? (
+                                    <Image
+                                        src={image}
+                                        thumbnail
+                                        className="mr-2"
+                                    />
+                                ) : (
+                                    <Image
+                                        src={URL.createObjectURL(image)}
+                                        thumbnail
+                                        className="mr-2"
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div> */}
                 </Form.Group>
 
                 <Form.Group controlId="price" className="mb-3">
@@ -224,10 +270,16 @@ const ProductEdit = () => {
                         readOnly
                     />
                 </Form.Group>
+                {
+                    !showUpdate ? <Button variant="primary" type="submit">
+                        Update Product
+                    </Button>
+                        :
+                        <Button variant="primary" disabled type="submit">
+                            Update Product
+                        </Button>
+                }
 
-                <Button variant="primary" type="submit">
-                    Update Product
-                </Button>
             </Form>
         </Container>
     );

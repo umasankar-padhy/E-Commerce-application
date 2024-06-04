@@ -1,13 +1,73 @@
 .welcome-message {
-    text-align: center;
-    margin: 20px 0;
-  }
-  
-  .welcome-message h1 {
-    margin-bottom: 20px;
-  }
-  
-  .welcome-message p {
-    margin-bottom: 20px;
-  }
-  
+  text-align: center;
+  margin: 20px 0;
+}
+
+.welcome-message h1 {
+  margin-bottom: 20px;
+}
+
+.welcome-message p {
+  margin-bottom: 20px;
+}
+
+/* MerchantDashboard.css */
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-grow: 1;
+}
+
+.sidebar {
+  background-color: #343a40;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 56px;
+  width: 250px;
+}
+
+.sidebar .nav-link {
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #495057;
+  border-radius: 5px;
+}
+
+.main-content {
+  margin-right: 250px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  width: calc(100% - 250px);
+}
+
+.welcome-message {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-message h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-message p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.badge {
+  margin-left: 10px;
+}

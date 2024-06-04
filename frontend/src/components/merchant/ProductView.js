@@ -28,6 +28,7 @@ const ProductView = () => {
   }, [id]);
 
   if (!product) return <div>Loading...</div>;
+  // console.log('Product:', product); // Log product to check image URLs
 
   return (
     <Container className="mt-4">

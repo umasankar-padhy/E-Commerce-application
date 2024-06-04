@@ -46,7 +46,7 @@ exports.createProduct = async (req, res) => {
         // Check if the merchant exists
         const merchant = await Merchant.findById(req.merchantId);
         if (!merchant) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Merchant not found",
             });
@@ -54,7 +54,7 @@ exports.createProduct = async (req, res) => {
 
         // Check for required fields
         if (!title || !price || !quantity || !MFG_Date || !EXP_Date || !brand || !category) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Required fields are missing",
             });
@@ -65,7 +65,7 @@ exports.createProduct = async (req, res) => {
         //     typeof size !== 'string' || typeof color !== 'string' || typeof isActive !== 'boolean' ||
         //     // !(MFG_Date instanceof Date) || !(EXP_Date instanceof Date) || typeof productId !== 'string' ||
         //     typeof brand !== 'string' || typeof category !== 'string' || typeof rating !== 'number') {
-        //     return res.status(400).json({
+        //     return res.status(202).json({
         //         success: false,
         //         message: "Invalid data types or constraints",
         //     });
@@ -73,7 +73,7 @@ exports.createProduct = async (req, res) => {
 
         // Validate dates
         if (MFG_Date >= EXP_Date) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Manufacturing date must be before expiration date",
             });
@@ -86,7 +86,7 @@ exports.createProduct = async (req, res) => {
         }
         // Validate images
         if (!req?.files?.images) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Images are required",
             });
@@ -104,7 +104,7 @@ exports.createProduct = async (req, res) => {
 
             // Validate file format
             if (!isFileTypeSupported(fileType, supportedTypes)) {
-                return res.status(400).json({
+                return res.status(202).json({
                     success: false,
                     message: `File format not supported (jpg, jpeg, png) : ${file.name}`,
                 });
@@ -112,7 +112,7 @@ exports.createProduct = async (req, res) => {
 
             // Optionally validate file size
             if (fileSize > maxFileSize) {
-                return res.status(400).json({
+                return res.status(202).json({
                     success: false,
                     message: `File size exceeds the limit 1 MB: ${file.name}`,
                 });
@@ -175,7 +175,7 @@ exports.getProduct = async (req, res) => {
         const products = await Product.find().populate('merchant_id', 'name email');
 
         if (!products) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "Product not found",
             });
@@ -201,7 +201,7 @@ exports.getProduct = async (req, res) => {
 //         const product = await Product.findById(productId).populate('merchant_id', 'name email');
 
 //         if (!product) {
-//             return res.status(404).json({
+//             return res.status(202).json({
 //                 success: false,
 //                 message: "Product not found",
 //             });
@@ -226,7 +226,7 @@ exports.getProductByMerchant = async (req, res) => {
         const products = await Product.find({ merchant_id: req.merchantId }).populate('merchant_id', 'name email');
 
         if (!products) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "Product not found",
             });
@@ -253,21 +253,21 @@ exports.updateProduct = async (req, res) => {
         // Check if the merchant exists
         const merchant = await Merchant.findById(req.merchantId);
         if (!merchant) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Merchant not found",
             });
         }
         // Check for required fields
         if (!title || !price || !quantity || !MFG_Date || !EXP_Date || !brand || !category) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Required fields are missing",
             });
         }
         // Validate dates
         if (MFG_Date >= EXP_Date) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "Manufacturing date must be before expiration date",
             });
@@ -278,7 +278,7 @@ exports.updateProduct = async (req, res) => {
         const existingProduct = await Product.findOne({ _id: productId, merchant_id: req.merchantId });
 
         if (!existingProduct) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "Product not found",
             });
@@ -299,14 +299,14 @@ exports.updateProduct = async (req, res) => {
                 const fileType = format[format?.length - 1].toLowerCase();
                 const fileSize = file.size; // Size in bytes
                 if (!isFileTypeSupported(fileType, supportedTypes)) {
-                    return res.status(400).json({
+                    return res.status(202).json({
                         success: false,
                         message: `File format not supported (jpg, jpeg, png) : ${file.name}`,
                     });
                 }
                 // Optionally validate file size
                 if (fileSize > maxFileSize) {
-                    return res.status(400).json({
+                    return res.status(202).json({
                         success: false,
                         message: `File size exceeds the limit 1 MB: ${file.name}`,
                     });
@@ -367,7 +367,7 @@ exports.deleteProduct = async (req, res) => {
         const product = await Product.findOneAndDelete({ _id: productId, merchant_id: req.merchantId });
 
         if (!product) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "Product not found",
             });
@@ -401,7 +401,7 @@ exports.deleteImage = async (req, res) => {
         const product = await Product.findOneAndUpdate({ _id: productId, merchant_id: req.merchantId, imageUrl: imageUrl }, { $pull: { imageUrl: imageUrl } }, { new: true });
 
         if (!product) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "Product not found",
             });
@@ -470,7 +470,7 @@ exports.getProductById = async (req, res) => {
         const product = await populateProductComments(productId);
 
         if (!product) {
-            return res.status(404).json({
+            return res.status(202).json({
                 success: false,
                 message: "Product not found",
             });

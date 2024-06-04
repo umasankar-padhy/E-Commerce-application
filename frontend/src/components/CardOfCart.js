@@ -50,9 +50,9 @@ export default function CardOfCart({ item }) {
                         <p className="card-text">Price: &#8377; {item.product_id?.price || 'N/A'}/-</p>
                         <p className="card-text">Quantity: {item.quantity || 'N/A'}</p>
                         <p className="card-text">
-                            <small className="text-muted">Size: {item.size || 'N/A'}</small>
+                            <small className="text-muted">Size: {item.product_id?.size || 'N/A'}</small>
                             <span>  </span>
-                            <small className="text-muted">Color: {item.color || 'N/A'}</small>
+                            <small className="text-muted">Color: {item.product_id?.color || 'N/A'}</small>
                         </p>
                         <button
                             className="btn btn-warning"
