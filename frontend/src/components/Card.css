@@ -1,0 +1,89 @@
+.card-container {
+    margin-bottom: 20px;
+}
+
+.custom-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+}
+
+.custom-card-img {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+    transition: transform 0.2s;
+}
+
+.card:hover .custom-card-img {
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 16px;
+    flex: 1;
+    /* height: 12rem; */
+}
+
+.card-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.card-price {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.card-quantity {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    margin-top: 8px;
+    flex-grow: 1;
+}
+
+.custom-btn {
+    font-size: 0.8rem;
+    transition: background-color 0.2s;
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+    /* Change to desired color */
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 8px 8px;
+}
+
+.custom-carousel .carousel-indicators {
+    bottom: -20px;
+}
+
+.custom-carousel .carousel-control-prev,
+.custom-carousel .carousel-control-next {
+    filter: invert(1);
+    /* Make the control buttons white */
+}

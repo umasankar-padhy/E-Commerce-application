@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Form, Button, Card, Container } from "react-bootstrap";
+import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../default";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "./MerchantSignup.css"; // Import custom styles
 
 const MerchantSignup = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,8 @@ const MerchantSignup = () => {
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,65 +44,87 @@ const MerchantSignup = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <Container className="d-flex justify-content-center mt-5">
-      <Card style={{ width: "30rem" }} className="p-4">
-        <h2 className="text-center">Become a Seller</h2>
+      <Card style={{ width: "30rem" }} className="p-4 shadow-lg">
+        <h2 className="text-center mb-4">Become a Seller</h2>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formBasicPhoneNo">
-            <Form.Label>Phone Number</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your phone number"
-              name="phoneNo"
-              value={formData.phoneNo}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formBasicAlternatePhoneNo">
-            <Form.Label>Alternate Phone Number</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your alternate phone number"
-              name="alternatePhoneNo"
-              value={formData.alternatePhoneNo}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter your password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+          <Row>
+            <Col xs={12} className="mb-3">
+              <Form.Group controlId="formBasicName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} className="mb-3">
+              <Form.Group controlId="formBasicPhoneNo">
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your phone number"
+                  name="phoneNo"
+                  value={formData.phoneNo}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} className="mb-3">
+              <Form.Group controlId="formBasicAlternatePhoneNo">
+                <Form.Label>Alternate Phone Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your alternate phone number"
+                  name="alternatePhoneNo"
+                  value={formData.alternatePhoneNo}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} className="mb-3">
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter your email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} className="mb-3">
+              <Form.Group controlId="formBasicPassword" className="position-relative">
+                <Form.Label>Password</Form.Label>
+                <div className="position-relative">
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <span
+                    className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"} toggle-password`}
+                    onClick={togglePasswordVisibility}
+                  ></span>
+                </div>
+              </Form.Group>
+            </Col>
+          </Row>
           <Button variant="primary" type="submit" className="w-100 mt-3">
             Sign Up
           </Button>

@@ -3,10 +3,10 @@ const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 
 // Create order from cart items
-exports.createOrder = async (req, res,next) => {
+exports.createOrder = async (req, res, next) => {
     try {
         const userId = req.userId;
-// console.log(req.body)
+        // console.log(req.body)
         // Get cart IDs array from the request body
         const { cartIds, addressId } = req.body;
 
@@ -14,7 +14,7 @@ exports.createOrder = async (req, res,next) => {
         const carts = await Cart.find({ _id: { $in: cartIds }, user_id: userId });
 
         if (carts.length !== cartIds.length) {
-            return res.status(400).json({
+            return res.status(202).json({
                 success: false,
                 message: "User is not connected to all cart items"
             });
@@ -37,10 +37,10 @@ exports.createOrder = async (req, res,next) => {
         //     success: true,
         //     data: savedOrder
         // });
-        req.orderId=savedOrder._id
+        req.orderId = savedOrder._id
         next();
     }
-     catch (error) {
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             success: false,

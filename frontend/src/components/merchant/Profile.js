@@ -28,13 +28,13 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      console.log(1)
+      // console.log(1)
       const response = await axios.get(`${url}api/v1/merchant/getProfile`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
       });
-      console.log(2)
+      // console.log(2)
       if (response.data && response.data.success) {
         const { name, phoneNo, alternatePhoneNo } = response.data.data;
         setProfileData({ name, phoneNo, alternatePhoneNo });

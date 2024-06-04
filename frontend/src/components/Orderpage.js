@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { url } from '../default';
 import AddressForm from './AddressForm';
@@ -19,6 +19,8 @@ export default function Orderpage() {
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const dispatch = useDispatch();
+
+    const [editItem, setEditItem] = useState(null);
 
     const totalPrice = cart
         .filter(item => item.product_id && !item.isOrdered)
@@ -109,6 +111,32 @@ export default function Orderpage() {
         }
     }
 
+    async function handleUpdateCart(item, updatedItem) {
+        try {
+            setLoading(true);
+            const res = await axios.put(`${url}api/v1/cart/update-cart`, {
+                product_id: item.product_id._id,
+                ...updatedItem,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${auth?.token}`
+                }
+            });
+
+            if (res.data.success) {
+                toast(res.data.message);
+                dispatch(setCart(res.data.data));
+                setEditItem(null);
+            } else {
+                toast(res.data.message);
+            }
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.error("Error:", err);
+        }
+    }
+
     return (
         <div>
             <Navbarr />
@@ -128,21 +156,76 @@ export default function Orderpage() {
                                     </Col>
                                     <Col md={8}>
                                         <Card.Body>
-                                            <Card.Title>{item.product_id?.title}</Card.Title>
-                                            <Card.Text>Price: ₹ {item.product_id?.price || 'N/A'}/-</Card.Text>
-                                            <Card.Text>Quantity: {item.quantity || 'N/A'}</Card.Text>
-                                            <Card.Text>
-                                                <small className="text-muted">Size: {item.size || 'N/A'}</small>
-                                                <span>  </span>
-                                                <small className="text-muted">Color: {item.color || 'N/A'}</small>
-                                            </Card.Text>
-                                            <Button
-                                                variant="warning"
-                                                onClick={() => { handleRemoveFromCart(item) }}
-                                                disabled={loading}
-                                            >
-                                                {loading ? 'Removing...' : 'Remove'}
-                                            </Button>
+                                            {editItem === item._id ? (
+                                                <Form>
+                                                    <Form.Group controlId="formQuantity">
+                                                        <Form.Label>Quantity</Form.Label>
+                                                        <Form.Control
+                                                            type="number"
+                                                            min="1"
+                                                            defaultValue={item.quantity}
+                                                            onChange={(e) => setEditItem({ ...item, quantity: e.target.value })}
+                                                        />
+                                                    </Form.Group>
+                                                    <Form.Group controlId="formSize">
+                                                        <Form.Label>Size</Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            defaultValue={item.size}
+                                                            onChange={(e) => setEditItem({ ...item, size: e.target.value })}
+                                                        />
+                                                    </Form.Group>
+                                                    <Form.Group controlId="formColor">
+                                                        <Form.Label>Color</Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            defaultValue={item.color}
+                                                            onChange={(e) => setEditItem({ ...item, color: e.target.value })}
+                                                        />
+                                                    </Form.Group>
+                                                    <div className="action-buttons">
+                                                        <Button
+                                                            variant="success"
+                                                            onClick={() => handleUpdateCart(item, editItem)}
+                                                            disabled={loading}
+                                                        >
+                                                            {loading ? <Spinner animation="border" size="sm" /> : 'Save'}
+                                                        </Button>
+                                                        <Button
+                                                            variant="secondary"
+                                                            onClick={() => setEditItem(null)}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </div>
+                                                </Form>
+                                            ) : (
+                                                <>
+                                                    <Card.Title>{item.product_id?.title}</Card.Title>
+                                                    <Card.Text>Price: ₹ {item.product_id?.price || 'N/A'}/-</Card.Text>
+                                                    <Card.Text>Quantity: {item.quantity || 'N/A'}</Card.Text>
+                                                    <Card.Text>
+                                                        <small className="text-muted">Size: {item.product_id?.size || 'N/A'}</small>
+                                                        <span>  </span>
+                                                        <small className="text-muted">Color: {item.product_id?.color || 'N/A'}</small>
+                                                    </Card.Text>
+                                                    <div className="action-buttons">
+                                                        <Button
+                                                            variant="warning"
+                                                            onClick={() => { handleRemoveFromCart(item) }}
+                                                            disabled={loading}
+                                                        >
+                                                            {loading ? <Spinner animation="border" size="sm" /> : 'Remove'}
+                                                        </Button>
+                                                        {/* <Button
+                                                            variant="primary"
+                                                            onClick={() => setEditItem(item._id)}
+                                                        >
+                                                            Edit
+                                                        </Button> */}
+                                                    </div>
+                                                </>
+                                            )}
                                         </Card.Body>
                                     </Col>
                                 </Row>
@@ -153,7 +236,7 @@ export default function Orderpage() {
                         <div className="checkout-section">
                             <h2 className="mb-4">Checkout</h2>
                             <div className="text-center mb-4">
-                                <h3>Total Price: ₹{totalPrice}</h3>
+                                <h3>Total Price: ₹{totalPrice.toFixed(2)}</h3>
                             </div>
                             <h2 className="mb-4">Shipping Address</h2>
                             {addresses.length > 0 ? (

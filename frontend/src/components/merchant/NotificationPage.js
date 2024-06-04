@@ -25,7 +25,7 @@ const NotificationPage = ({ noti }) => {
         };
 
         sendNotificationIds();
-        
+
     }, [noti, auth?.token]);
 
     return (
