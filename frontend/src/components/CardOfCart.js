@@ -45,7 +45,7 @@ export default function CardOfCart({ item }) {
                     />
                 </div>
                 <div className="col-md-8">
-                    <div className="card-body" style={{ width: '300px' }}>
+                    <div className="card-body" style={{ width: '265px' }}>
                         <h5 className="card-title">{item.product_id?.title}</h5>
                         <p className="card-text">Price: &#8377; {item.product_id?.price || 'N/A'}/-</p>
                         <p className="card-text">Quantity: {item.quantity || 'N/A'}</p>
